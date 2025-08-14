@@ -23,11 +23,11 @@ const BusinessManagement = () => {
 							Balances & Mint
 						</span>
 					}>
-					<div className="flex gap-6 flex-wrap">
-						<div className="flex-1">
+					<div className="flex gap-6 flex-wrap lg:flex-row md:flex-row sm:flex-col justify-center w-full">
+						<div className="flex-1 w-fit min-w-xs max-w-sm">
 							<TokenBalances />
 						</div>
-						<div className="flex-2">
+						<div className="flex-2 w-fit min-w-sm max-w-lg">
 							<MintStablecoins />
 						</div>
 					</div>

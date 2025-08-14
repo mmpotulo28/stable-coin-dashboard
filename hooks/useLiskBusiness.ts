@@ -27,6 +27,10 @@ export function useLiskBusiness() {
 	const [pendingLoading, setPendingLoading] = useState(false);
 	const [pendingError, setPendingError] = useState<string | null>(null);
 
+	const [userGasLoading, setUserGasLoading] = useState(false);
+	const [userGasSuccess, setUserGasSuccess] = useState<string | null>(null);
+	const [userGasError, setUserGasError] = useState<string | null>(null);
+
 	// Fetch float balances
 	const fetchFloat = async () => {
 		setLoadingFloat(true);
@@ -60,6 +64,25 @@ export function useLiskBusiness() {
 			setGasError("Failed to enable gas.");
 		} finally {
 			setGasLoading(false);
+		}
+	};
+
+	// Enable gas for a user
+	const enableUserGas = async (userId: string) => {
+		setUserGasLoading(true);
+		setUserGasSuccess(null);
+		setUserGasError(null);
+		try {
+			await axios.post(
+				`${API_BASE}/activate-pay/${userId}`,
+				{},
+				{ headers: { Authorization: API_TOKEN } },
+			);
+			setUserGasSuccess("Gas payment activated successfully for user.");
+		} catch (err: any) {
+			setUserGasError("Failed to activate gas payment for user.");
+		} finally {
+			setUserGasLoading(false);
 		}
 	};
 
@@ -131,6 +154,10 @@ export function useLiskBusiness() {
 		gasSuccess,
 		gasError,
 		handleEnableGas,
+		userGasLoading,
+		userGasSuccess,
+		userGasError,
+		enableUserGas,
 
 		mintForm,
 		setMintForm,
