@@ -4,8 +4,8 @@ import { Tabs, Tab } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { TokenBalances } from "@/components/business/token-balances";
 import { EnableGas } from "@/components/business/enable-gas";
-import { MintStablecoins } from "@/components/business/mint-stablecoins";
 import { PendingTransactions } from "@/components/business/pending-transactions";
+import { MintStablecoins } from "@/components/business/mint-stablecoins";
 
 const BusinessManagement = () => {
 	return (
@@ -16,14 +16,21 @@ const BusinessManagement = () => {
 				variant="bordered"
 				aria-label="Business Management Tabs">
 				<Tab
-					key="balances"
+					key="balances-mint"
 					title={
 						<span className="flex items-center gap-2">
 							<Icon icon="lucide:wallet" />
-							Token Balances
+							Balances & Mint
 						</span>
 					}>
-					<TokenBalances />
+					<div className="flex gap-6 flex-wrap">
+						<div className="flex-1">
+							<TokenBalances />
+						</div>
+						<div className="flex-2">
+							<MintStablecoins />
+						</div>
+					</div>
 				</Tab>
 				<Tab
 					key="gas"
@@ -34,16 +41,6 @@ const BusinessManagement = () => {
 						</span>
 					}>
 					<EnableGas />
-				</Tab>
-				<Tab
-					key="mint"
-					title={
-						<span className="flex items-center gap-2">
-							<Icon icon="lucide:coins" />
-							Mint Stablecoins
-						</span>
-					}>
-					<MintStablecoins />
 				</Tab>
 				<Tab
 					key="pending"

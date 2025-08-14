@@ -1,17 +1,5 @@
 import React from "react";
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Table,
-	TableHeader,
-	TableColumn,
-	TableBody,
-	TableRow,
-	TableCell,
-	Chip,
-	Spinner,
-} from "@heroui/react";
+import { Card, CardHeader, CardBody, Chip, Spinner, Image } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskBusiness } from "@/hooks/useLiskBusiness";
 
@@ -28,30 +16,46 @@ export function TokenBalances() {
 			</CardHeader>
 			<CardBody>
 				{loadingFloat ? (
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 justify-center py-8">
 						<Spinner label="Loading balances..." />
 					</div>
 				) : floatError ? (
-					<div className="text-danger">{floatError}</div>
+					<div className="text-danger text-center py-8">{floatError}</div>
+				) : float.length === 0 ? (
+					<div className="flex flex-col items-center justify-center py-8">
+						<Image
+							src="https://illustrations.popsy.co/gray/empty-wallet.svg"
+							alt="No tokens"
+							width={80}
+							height={80}
+							className="mb-4"
+						/>
+						<div className="text-default-500 font-medium">No tokens found.</div>
+					</div>
 				) : (
-					<Table aria-label="Token Balances" removeWrapper>
-						<TableHeader>
-							<TableColumn>TOKEN</TableColumn>
-							<TableColumn>BALANCE</TableColumn>
-						</TableHeader>
-						<TableBody>
-							{float.map((token) => (
-								<TableRow key={token.name}>
-									<TableCell>{token.name}</TableCell>
-									<TableCell>
-										<Chip color="primary" variant="flat">
-											{token.balance}
-										</Chip>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+					<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+						{float.map((token) => (
+							<Card
+								key={token.name}
+								className="flex flex-col items-center justify-center p-6 bg-default-100 shadow-md rounded-xl ">
+								<div className="flex items-center gap-2 mb-2">
+									<Icon icon="lucide:coins" className="text-2xl text-primary" />
+									<span className="font-semibold text-lg text-nowrap">
+										{token.name}
+									</span>
+								</div>
+								<div className="flex flex-col items-center mt-2">
+									<span className="text-default-400 text-xs mb-1">Balance</span>
+									<Chip
+										color="primary"
+										variant="flat"
+										className="text-xl px-4 py-2 font-bold">
+										{token.balance}
+									</Chip>
+								</div>
+							</Card>
+						))}
+					</div>
 				)}
 			</CardBody>
 		</Card>
