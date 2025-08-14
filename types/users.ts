@@ -12,3 +12,20 @@ export interface IUser {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface IUserTokenBalance {
+	name: string;
+	balance: number;
+}
+
+export interface IUserTransaction {
+	id: string;
+	userId: string;
+	externalId?: string | null;
+	txType: string;
+	method: string;
+	currency: string;
+	value: number;
+	status: string;
+	createdAt: string;
+}

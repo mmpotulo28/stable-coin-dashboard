@@ -1,5 +1,5 @@
 import { StatsCard } from "@/components/stats-card";
-import { UserList } from "@/components/user-list";
+import { UserList } from "@/components/users/user-list";
 import React from "react";
 
 export function Dashboard() {

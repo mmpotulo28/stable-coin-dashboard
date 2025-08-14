@@ -2,10 +2,15 @@ import React from "react";
 import { Card, CardHeader, CardBody, Chip, Spinner, Image } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskBusiness } from "@/hooks/useLiskBusiness";
+import { IUserTokenBalance } from "@/types/users";
 
-export function TokenBalances() {
-	const { float, loadingFloat, floatError } = useLiskBusiness();
+export interface TokenBalanceProps {
+	float: IUserTokenBalance[];
+	loadingFloat: boolean;
+	floatError: string | null;
+}
 
+export function TokenBalances({ float, loadingFloat, floatError }: TokenBalanceProps) {
 	return (
 		<Card>
 			<CardHeader>

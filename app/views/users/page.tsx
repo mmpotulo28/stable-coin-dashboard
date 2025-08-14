@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Tabs, Tab, Input, Button, Spinner, Image, Card, Divider } from "@heroui/react";
-import { UserList } from "@/components/user-list";
+import { UserList } from "@/components/users/user-list";
 import { UserDetailsCard } from "@/components/users/user-details-card";
 import { CreateUserModal } from "@/components/users/create-user-modal";
 import axios from "axios";

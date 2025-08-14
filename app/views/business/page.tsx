@@ -6,8 +6,10 @@ import { TokenBalances } from "@/components/business/token-balances";
 import { EnableGas } from "@/components/business/enable-gas";
 import { PendingTransactions } from "@/components/business/pending-transactions";
 import { MintStablecoins } from "@/components/business/mint-stablecoins";
+import { useLiskBusiness } from "@/hooks/useLiskBusiness";
 
 const BusinessManagement = () => {
+	const { float, loadingFloat, floatError } = useLiskBusiness();
 	return (
 		<div className="flex-1 overflow-auto p-6 space-y-8">
 			<h1 className="text-2xl font-semibold mb-6">Business Management</h1>
@@ -25,7 +27,11 @@ const BusinessManagement = () => {
 					}>
 					<div className="flex gap-6 flex-wrap lg:flex-row md:flex-row sm:flex-col justify-center w-full">
 						<div className="flex-1 w-fit min-w-xs max-w-sm">
-							<TokenBalances />
+							<TokenBalances
+								float={float}
+								loadingFloat={loadingFloat}
+								floatError={floatError}
+							/>
 						</div>
 						<div className="flex-2 w-fit min-w-sm max-w-lg">
 							<MintStablecoins />

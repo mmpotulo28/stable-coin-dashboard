@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { IUserTokenBalance } from "@/types/users";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
@@ -23,7 +24,7 @@ function getCache(key: string) {
 }
 
 export function useLiskBusiness() {
-	const [float, setFloat] = useState<{ name: string; balance: string }[]>([]);
+	const [float, setFloat] = useState<IUserTokenBalance[]>([]);
 	const [loadingFloat, setLoadingFloat] = useState(false);
 	const [floatError, setFloatError] = useState<string | null>(null);
 
@@ -60,10 +61,9 @@ export function useLiskBusiness() {
 			return;
 		}
 		try {
-			const { data } = await axios.get<{ tokens: { name: string; balance: string }[] }>(
-				`${API_BASE}/float`,
-				{ headers: { Authorization: API_TOKEN } },
-			);
+			const { data } = await axios.get<{ tokens: IUserTokenBalance[] }>(`${API_BASE}/float`, {
+				headers: { Authorization: API_TOKEN },
+			});
 			setFloat(data.tokens || []);
 			setCache(cacheKey, data.tokens || []);
 		} catch (err: any) {
