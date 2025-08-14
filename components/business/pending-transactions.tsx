@@ -12,6 +12,7 @@ import {
 	Chip,
 	Spinner,
 	Pagination,
+	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskBusiness } from "@/hooks/useLiskBusiness";
@@ -58,8 +59,16 @@ export function PendingTransactions() {
 								{pendingTx?.transactions?.map((tx: any) => (
 									<TableRow key={tx.id}>
 										<TableCell>{tx.id}</TableCell>
-										<TableCell>{tx.user?.email ?? tx.userId}</TableCell>
-										<TableCell>{tx.txType}</TableCell>
+										<TableCell>
+											<Snippet
+												hideSymbol
+												className="max-w-xs overflow-auto"
+												size="sm"
+												variant="bordered">
+												{tx.user?.email ?? tx.userId}
+											</Snippet>
+										</TableCell>
+										<TableCell className="text-nowrap">{tx.txType}</TableCell>
 										<TableCell>{tx.method}</TableCell>
 										<TableCell>{tx.creditCurrency}</TableCell>
 										<TableCell>{tx.creditValue}</TableCell>

@@ -1,9 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
+
+function setCache(key: string, value: any) {
+	Cookies.set(key, JSON.stringify({ value, ts: Date.now() }), { expires: 1 / 1440 }); // 1 min
+}
+
+function getCache(key: string) {
+	const raw = Cookies.get(key);
+	if (!raw) return null;
+	try {
+		const { value, ts } = JSON.parse(raw);
+		if (Date.now() - ts < 60000) return value; // valid for 1 min
+	} catch {
+		return null;
+	}
+	return null;
+}
 
 export function useLiskBusiness() {
 	const [float, setFloat] = useState<{ name: string; balance: string }[]>([]);
@@ -35,12 +52,20 @@ export function useLiskBusiness() {
 	const fetchFloat = async () => {
 		setLoadingFloat(true);
 		setFloatError(null);
+		const cacheKey = "float_balances";
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setFloat(cached);
+			setLoadingFloat(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<{ tokens: { name: string; balance: string }[] }>(
 				`${API_BASE}/float`,
 				{ headers: { Authorization: API_TOKEN } },
 			);
 			setFloat(data.tokens || []);
+			setCache(cacheKey, data.tokens || []);
 		} catch (err: any) {
 			setFloatError("Failed to fetch token balances.");
 		} finally {
@@ -121,6 +146,13 @@ export function useLiskBusiness() {
 	const fetchPendingTx = async (page = 1, pageSize = 10) => {
 		setPendingLoading(true);
 		setPendingError(null);
+		const cacheKey = `pending_tx`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setPendingTx(cached);
+			setPendingLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<{
 				transactions: any[];
@@ -132,6 +164,7 @@ export function useLiskBusiness() {
 				headers: { Authorization: API_TOKEN },
 			});
 			setPendingTx(data);
+			setCache(cacheKey, data);
 		} catch (err: any) {
 			setPendingError("Failed to fetch pending transactions.");
 		} finally {

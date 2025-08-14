@@ -20,9 +20,9 @@ import {
 import { Icon } from "@iconify/react";
 import { useStableCoin } from "@/context/StableCoinProvider";
 import { IUser } from "@/types/users";
-import { UserDetailsModal } from "@/components/user-details-modal";
-import { UpdateUserModal } from "@/components/update-user-modal";
-import { DeleteUserModal } from "@/components/delete-user-modal";
+import { UserDetailsModal } from "@/components/users/user-details-modal";
+import { UpdateUserModal } from "@/components/users/update-user-modal";
+import { DeleteUserModal } from "@/components/users/delete-user-modal";
 
 export function UserList({ limit = 10 }) {
 	const { users, loadingUsers, errorUsers, fetchUsers } = useStableCoin();
