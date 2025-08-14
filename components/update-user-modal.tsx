@@ -91,7 +91,7 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-background">
+			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-default-50">
 			<ModalContent>
 				<ModalHeader className="flex items-center gap-3  pb-3 bg-default-50 rounded-t-2xl">
 					<Icon icon="lucide:pencil" className="text-2xl text-primary" />

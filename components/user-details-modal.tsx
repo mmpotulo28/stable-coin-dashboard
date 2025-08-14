@@ -26,7 +26,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-background">
+			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-default-50">
 			<ModalContent>
 				<ModalHeader className="flex items-center gap-3  pb-3 bg-default-50 rounded-t-2xl">
 					<Icon icon="lucide:user" className="text-3xl text-primary" />
@@ -35,7 +35,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 				<ModalBody>
 					{user && (
 						<div className="space-y-6">
-							<div className="flex items-center justify-between gap-4 mb-4">
+							<div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
 								<HeroUser
 									name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
 									description={user.email}
@@ -53,7 +53,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 									{getRole(user)}
 								</Chip>
 							</div>
-							<div className="grid grid-cols-2 gap-4 text-sm">
+							<div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4 text-sm">
 								<div>
 									<span className="font-semibold text-default-700">User ID:</span>
 									<Snippet

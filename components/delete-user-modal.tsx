@@ -53,7 +53,7 @@ export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUser
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			className="max-w-md mx-auto rounded-2xl shadow-2xl bg-background">
+			className="max-w-md mx-auto rounded-2xl shadow-2xl bg-default-50">
 			<ModalContent>
 				<ModalHeader className="flex items-center gap-2 pb-2">
 					<Icon icon="lucide:trash-2" className="text-2xl text-danger" />

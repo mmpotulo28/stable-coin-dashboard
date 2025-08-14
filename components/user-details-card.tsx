@@ -7,7 +7,7 @@ const getRole = (user: IUser) => user.role || "CUSTOMER";
 
 export function UserDetailsCard({ user }: { user: IUser }) {
 	return (
-		<Card className="max-w-2xl bg-default-100">
+		<Card className="sm:max-w-sm md:max-w-2xl lg:max-w-2xl sm:bg-red-100 lg:bg-default-100 w-full">
 			<CardHeader className="flex items-center gap-3  pb-3  rounded-t-2xl">
 				<Icon icon="lucide:user" className="text-3xl text-primary" />
 				<span className="text-xl font-bold">User Details</span>

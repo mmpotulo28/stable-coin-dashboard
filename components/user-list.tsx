@@ -80,7 +80,7 @@ export function UserList({ limit = 10 }) {
 	const displayUsers = users.slice(0, limit);
 
 	return (
-		<>
+		<div className="w-full max-w-full overflow-auto">
 			<Table aria-label="User list" removeWrapper>
 				<TableHeader>
 					<TableColumn>USER</TableColumn>
@@ -163,6 +163,6 @@ export function UserList({ limit = 10 }) {
 				onClose={closeDeleteModal}
 				onDeleted={fetchUsers}
 			/>
-		</>
+		</div>
 	);
 }

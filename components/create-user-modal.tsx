@@ -91,7 +91,7 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-background">
+			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-default-50">
 			<ModalContent>
 				<ModalHeader className="flex items-center gap-3 pb-3 bg-default-50 rounded-t-2xl">
 					<Icon icon="lucide:user-plus" className="text-2xl text-primary" />
@@ -107,7 +107,7 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 							onChange={handleChange}
 							isRequired
 						/>
-						<div className="flex gap-4">
+						<div className="flex gap-4 sm:flex-col">
 							<Input
 								label="First Name"
 								name="firstName"
@@ -123,7 +123,7 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 								isRequired
 							/>
 						</div>
-						<div className="flex gap-4">
+						<div className="flex gap-4 sm:flex-col">
 							<Select
 								name="role"
 								value={form.role}
