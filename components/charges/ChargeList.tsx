@@ -122,7 +122,8 @@ export function ChargeList({ userId }: { userId: string }) {
 											</button>
 											<button
 												type="button"
-												aria-label="Update user"
+												aria-label="delete charge"
+												disabled={deleteLoading}
 												onClick={async () => {
 													setDeleteId(charge.id);
 													await deleteCharge({
@@ -132,7 +133,11 @@ export function ChargeList({ userId }: { userId: string }) {
 													setDeleteId(null);
 												}}
 												className="p-2 rounded-md hover:bg-default-100 text-danger">
-												<Icon icon="lucide:trash" className="text-xl" />
+												{deleteLoading && deleteId === charge.id ? (
+													<Spinner size="sm" />
+												) : (
+													<Icon icon="lucide:trash" className="text-xl" />
+												)}
 											</button>
 										</div>
 

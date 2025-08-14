@@ -1,23 +1,53 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input, Card, CardBody, CardHeader, Image, Chip } from "@heroui/react";
+import { Button, Input, Card, CardBody, CardHeader, Image, Chip, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { ChargeList } from "@/components/charges/ChargeList";
 import { CreateChargeModal } from "@/components/charges/CreateChargeModal";
+import axios from "axios";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
+const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 export default function ChargesPage() {
 	const [userId, setUserId] = useState("");
 	const [confirmedUserId, setConfirmedUserId] = useState<string | null>(null);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
+	const [checkingUser, setCheckingUser] = useState(false);
+	const [userError, setUserError] = useState<string | null>(null);
+	const [userInfo, setUserInfo] = useState<any>(null);
+	const [showCheckingMsg, setShowCheckingMsg] = useState(false);
 
-	const handleConfirm = (e: React.FormEvent) => {
+	const handleConfirm = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (userId.trim()) setConfirmedUserId(userId.trim());
+		if (!userId.trim()) return;
+		setCheckingUser(true);
+		setShowCheckingMsg(true);
+		setUserError(null);
+		setUserInfo(null);
+		try {
+			const { data } = await axios.get<{ user: any }>(`${API_BASE}/users/${userId.trim()}`, {
+				headers: { Authorization: API_TOKEN },
+			});
+			setUserInfo(data.user);
+			setConfirmedUserId(userId.trim());
+		} catch (err: any) {
+			if (err?.response?.status === 404) setUserError("User not found.");
+			else if (err?.response?.status === 400) setUserError("Invalid user ID.");
+			else if (err?.response?.status === 401) setUserError("Unauthorized.");
+			else setUserError("Failed to fetch user.");
+		} finally {
+			setCheckingUser(false);
+			setTimeout(() => setShowCheckingMsg(false), 800);
+		}
 	};
 
 	const handleReset = () => {
 		setUserId("");
 		setConfirmedUserId(null);
+		setUserInfo(null);
+		setUserError(null);
+		setShowCheckingMsg(false);
 	};
 
 	return (
@@ -49,15 +79,33 @@ export default function ChargesPage() {
 							className="max-w-xs"
 							size="sm"
 							autoFocus
+							isDisabled={checkingUser}
 						/>
 						<Button
 							color="primary"
 							type="submit"
-							isDisabled={!userId.trim()}
+							isDisabled={!userId.trim() || checkingUser}
 							startContent={<Icon icon="lucide:search" />}>
-							Proceed
+							{checkingUser ? <Spinner size="sm" /> : "Proceed"}
 						</Button>
 					</form>
+					{showCheckingMsg && (
+						<div className="flex items-center gap-2 mt-4 text-default-500">
+							<Spinner size="sm" />
+							<span>Checking if user exists...</span>
+						</div>
+					)}
+					{userError && <div className="text-danger mt-4 font-medium">{userError}</div>}
+					{userInfo && (
+						<div className="mt-4 flex flex-col items-center gap-2">
+							<Chip color="primary" variant="flat">
+								{userInfo.email}
+							</Chip>
+							<div className="text-default-500 text-xs">
+								User found: {userInfo.firstName} {userInfo.lastName}
+							</div>
+						</div>
+					)}
 				</Card>
 			) : (
 				<>
