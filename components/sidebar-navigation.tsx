@@ -8,7 +8,7 @@ const navigationItems = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/" },
 	{ name: "User Management", icon: "lucide:users", href: "/views/users" },
 	{ name: "Business Management", icon: "lucide:briefcase", href: "/views/business" },
-	{ name: "Transactions", icon: "lucide:banknote", href: "/views/transactions" },
+	{ name: "Make Transfer", icon: "lucide:banknote", href: "/views/transfer" },
 	{ name: "Blocks", icon: "lucide:boxes", href: "/views/blocks" },
 	{ name: "Settings", icon: "lucide:settings", href: "/views/settings" },
 ];
