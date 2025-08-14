@@ -29,3 +29,20 @@ export interface IUserTransaction {
 	status: string;
 	createdAt: string;
 }
+
+export interface IApiToken {
+	id: string;
+	description: string | null;
+	revoked: boolean;
+	createdAt: string;
+	revokedAt: string | null;
+}
+
+export interface IApiTokenCreateResponse {
+	id: string;
+	token: string;
+}
+
+export interface IApiTokenRevokeResponse {
+	message: string;
+}
