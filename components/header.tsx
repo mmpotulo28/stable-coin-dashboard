@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import React from "react";
-import { ThemeSwitcher } from "./theme-switcher";
+import { ThemeSwitch } from "./theme-switcher";
 import { useSideBar } from "@/context/SideBarProvider";
 
 export function Header() {
@@ -32,7 +32,7 @@ export function Header() {
 				</Link>
 			</div>
 			<div className="flex items-center gap-3">
-				<ThemeSwitcher />
+				<ThemeSwitch />
 				<Button isIconOnly variant="light">
 					<Icon icon="lucide:bell" className="text-xl" />
 				</Button>
