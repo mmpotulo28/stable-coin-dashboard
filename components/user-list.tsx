@@ -71,7 +71,9 @@ export function UserList({ limit = 10 }) {
 										name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
 										description={user.email}
 										avatarProps={{
-											src: `https://img.heroui.chat/image/avatar?w=200&h=200&u=${user.id}`,
+											src:
+												user.imageUrl ||
+												"https://img.heroui.chat/image/avatar?w=200&h=200&u=default",
 										}}
 									/>
 								</button>

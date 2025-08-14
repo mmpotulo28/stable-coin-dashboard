@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip, Snippet, User as HeroUser } from "@heroui/react";
+import { Chip, Snippet, User as HeroUser, Card, CardHeader, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { IUser } from "@/types/users";
 
@@ -7,14 +7,14 @@ const getRole = (user: IUser) => user.role || "CUSTOMER";
 
 export function UserDetailsCard({ user }: { user: IUser }) {
 	return (
-		<div>
-			<div className="flex items-center gap-3 border-b pb-3 bg-default-50 rounded-t-2xl">
+		<Card className="max-w-2xl bg-default-100">
+			<CardHeader className="flex items-center gap-3  pb-3  rounded-t-2xl">
 				<Icon icon="lucide:user" className="text-3xl text-primary" />
 				<span className="text-xl font-bold">User Details</span>
-			</div>
-			<div>
+			</CardHeader>
+			<CardBody>
 				{user && (
-					<div className="space-y-6">
+					<div className="space-y-6 p-4">
 						<div className="flex items-center gap-4 mb-4">
 							<HeroUser
 								name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
@@ -104,7 +104,7 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 						</div>
 					</div>
 				)}
-			</div>
-		</div>
+			</CardBody>
+		</Card>
 	);
 }

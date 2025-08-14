@@ -40,7 +40,9 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 									name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
 									description={user.email}
 									avatarProps={{
-										src: `https://img.heroui.chat/image/avatar?w=200&h=200&u=${user.id}`,
+										src:
+											user.imageUrl ||
+											"https://img.heroui.chat/image/avatar?w=200&h=200&u=default",
 										className: "w-16 h-16",
 									}}
 								/>

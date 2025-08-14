@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, Tab, Input, Button, Spinner, Image } from "@heroui/react";
+import { Tabs, Tab, Input, Button, Spinner, Image, Card, Divider } from "@heroui/react";
 import { UserList } from "@/components/user-list";
 import { UserDetailsCard } from "@/components/user-details-card";
 import axios from "axios";
@@ -54,7 +54,7 @@ const UsersPage = () => {
 	};
 
 	return (
-		<div className="flex-1 overflow-auto p-6">
+		<div className="flex-1 overflow-auto p-6 relative">
 			<h1 className="text-2xl font-semibold mb-6">User Management</h1>
 			<Tabs
 				selectedKey={selectedTab}
@@ -64,10 +64,10 @@ const UsersPage = () => {
 					<UserList />
 				</Tab>
 				<Tab key="single" title="Single User">
-					<div className="max-w-lg mx-auto">
+					<div className="max-w-full mx-0">
 						{/* Step 1: Search Form Card */}
 						{!foundUser && (
-							<div className="bg-background rounded-2xl shadow-lg border border-default-200 p-8 mb-6 flex flex-col items-center">
+							<Card className="p-8 mb-6 flex flex-col items-center max-w-lg mx-auto">
 								<Image
 									src="https://illustrations.popsy.co/gray/woman-on-laptop-google.svg"
 									alt="Search illustration"
@@ -137,19 +137,21 @@ const UsersPage = () => {
 										</div>
 									)}
 								</form>
-							</div>
+							</Card>
 						)}
 						{/* Step 2: Show user details */}
 						{foundUser && (
-							<div className="relative">
+							<div>
 								<Button
-									variant="light"
-									color="danger"
-									className="absolute right-0 top-0 z-10"
+									radius="sm"
+									variant="bordered"
+									color="primary"
+									className="absolute  top-8 right-5"
 									onPress={handleClear}
-									startContent={<Icon icon="lucide:x" />}>
-									Close
+									startContent={<Icon icon="lucide:search" />}>
+									Search Again
 								</Button>
+								<Divider className="my-4" />
 								<UserDetailsCard user={foundUser} />
 							</div>
 						)}
