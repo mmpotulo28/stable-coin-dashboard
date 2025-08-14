@@ -15,17 +15,19 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 			<CardBody>
 				{user && (
 					<div className="space-y-6 p-4">
-						<div className="flex items-center gap-4 mb-4">
+						<div className="flex items-center justify-between gap-4 mb-4">
 							<HeroUser
 								name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
 								description={user.email}
 								avatarProps={{
-									src: `https://img.heroui.chat/image/avatar?w=200&h=200&u=${user.id}`,
+									src:
+										user.imageUrl ||
+										"https://img.heroui.chat/image/avatar?w=200&h=200&u=default",
 									className: "w-16 h-16",
 								}}
 							/>
 							<Chip
-								color={getRole(user) === "ADMIN" ? "primary" : "default"}
+								color={getRole(user) === "ADMIN" ? "primary" : "secondary"}
 								variant="flat"
 								className="ml-2 text-base px-4 py-2 ">
 								{getRole(user)}
@@ -38,7 +40,7 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 									hideSymbol
 									variant="bordered"
 									size="sm"
-									className="mt-1 max-w-full overflow-auto"
+									className="mt-1 max-w-full overflow-auto w-full"
 									copyButtonProps={{ "aria-label": "Copy User ID" }}>
 									{user.id}
 								</Snippet>
@@ -57,7 +59,7 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 									hideSymbol
 									variant="bordered"
 									size="sm"
-									className="mt-1 max-w-full overflow-auto"
+									className="mt-1 max-w-full overflow-auto w-full"
 									copyButtonProps={{
 										"aria-label": "Copy Payment Identifier",
 									}}>
@@ -70,7 +72,7 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 									hideSymbol
 									variant="bordered"
 									size="sm"
-									className="mt-1 max-w-full overflow-auto"
+									className="mt-1 max-w-full overflow-auto w-full"
 									copyButtonProps={{ "aria-label": "Copy Public Key" }}>
 									{user.publicKey ?? "-"}
 								</Snippet>
@@ -79,8 +81,9 @@ export function UserDetailsCard({ user }: { user: IUser }) {
 								<span className="font-semibold text-default-700">Pay Enabled:</span>
 								<div>
 									<Chip
+										className="mt-2"
 										color={user.enabledPay ? "success" : "danger"}
-										variant="dot">
+										variant="bordered">
 										{user.enabledPay ? "Enabled" : "Disabled"}
 									</Chip>
 								</div>

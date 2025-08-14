@@ -9,17 +9,27 @@ import {
 	TableCell,
 	User,
 	Chip,
+	Modal,
+	ModalContent,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Button,
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useStableCoin } from "@/context/StableCoinProvider";
 import { IUser } from "@/types/users";
 import { UserDetailsModal } from "@/components/user-details-modal";
+import { UpdateUserModal } from "@/components/update-user-modal";
+import { DeleteUserModal } from "@/components/delete-user-modal";
 
 export function UserList({ limit = 10 }) {
-	const { users, loadingUsers, errorUsers } = useStableCoin();
+	const { users, loadingUsers, errorUsers, fetchUsers } = useStableCoin();
 	const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
 	const getRole = (user: IUser) => user.role || "CUSTOMER";
 
@@ -28,8 +38,28 @@ export function UserList({ limit = 10 }) {
 		setIsModalOpen(true);
 	};
 
+	const handleUpdateClick = (user: IUser) => {
+		setSelectedUser(user);
+		setIsUpdateModalOpen(true);
+	};
+
+	const handleDeleteClick = (user: IUser) => {
+		setSelectedUser(user);
+		setIsDeleteModalOpen(true);
+	};
+
 	const closeModal = () => {
 		setIsModalOpen(false);
+		setSelectedUser(null);
+	};
+
+	const closeUpdateModal = () => {
+		setIsUpdateModalOpen(false);
+		setSelectedUser(null);
+	};
+
+	const closeDeleteModal = () => {
+		setIsDeleteModalOpen(false);
 		setSelectedUser(null);
 	};
 
@@ -63,20 +93,15 @@ export function UserList({ limit = 10 }) {
 					{displayUsers.map((user) => (
 						<TableRow key={user.id}>
 							<TableCell>
-								<button
-									type="button"
-									className="w-full text-left"
-									onClick={() => handleUserClick(user)}>
-									<User
-										name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
-										description={user.email}
-										avatarProps={{
-											src:
-												user.imageUrl ||
-												"https://img.heroui.chat/image/avatar?w=200&h=200&u=default",
-										}}
-									/>
-								</button>
+								<User
+									name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
+									description={user.email}
+									avatarProps={{
+										src:
+											user.imageUrl ||
+											"https://img.heroui.chat/image/avatar?w=200&h=200&u=default",
+									}}
+								/>
 							</TableCell>
 							<TableCell>
 								<Chip
@@ -96,13 +121,29 @@ export function UserList({ limit = 10 }) {
 									: "-"}
 							</TableCell>
 							<TableCell>
-								<button
-									type="button"
-									aria-label="View user details"
-									onClick={() => handleUserClick(user)}
-									className="p-2 rounded-md hover:bg-default-100">
-									<Icon icon="lucide:eye" className="text-xl" />
-								</button>
+								<div className="flex gap-2">
+									<button
+										type="button"
+										aria-label="View user details"
+										onClick={() => handleUserClick(user)}
+										className="p-2 rounded-md hover:bg-default-100">
+										<Icon icon="lucide:eye" className="text-xl" />
+									</button>
+									<button
+										type="button"
+										aria-label="Update user"
+										onClick={() => handleUpdateClick(user)}
+										className="p-2 rounded-md hover:bg-default-100 text-primary">
+										<Icon icon="lucide:pencil" className="text-xl" />
+									</button>
+									<button
+										type="button"
+										aria-label="Delete user"
+										onClick={() => handleDeleteClick(user)}
+										className="p-2 rounded-md hover:bg-danger-100 text-danger">
+										<Icon icon="lucide:trash-2" className="text-xl" />
+									</button>
+								</div>
 							</TableCell>
 						</TableRow>
 					))}
@@ -110,6 +151,18 @@ export function UserList({ limit = 10 }) {
 			</Table>
 
 			<UserDetailsModal user={selectedUser} isOpen={isModalOpen} onClose={closeModal} />
+			<UpdateUserModal
+				user={selectedUser}
+				isOpen={isUpdateModalOpen}
+				onClose={closeUpdateModal}
+				onUpdated={fetchUsers}
+			/>
+			<DeleteUserModal
+				user={selectedUser}
+				isOpen={isDeleteModalOpen}
+				onClose={closeDeleteModal}
+				onDeleted={fetchUsers}
+			/>
 		</>
 	);
 }

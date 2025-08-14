@@ -28,14 +28,14 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 			onClose={onClose}
 			className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-background">
 			<ModalContent>
-				<ModalHeader className="flex items-center gap-3 border-b pb-3 bg-default-50 rounded-t-2xl">
+				<ModalHeader className="flex items-center gap-3  pb-3 bg-default-50 rounded-t-2xl">
 					<Icon icon="lucide:user" className="text-3xl text-primary" />
 					<span className="text-xl font-bold">User Details</span>
 				</ModalHeader>
 				<ModalBody>
 					{user && (
 						<div className="space-y-6">
-							<div className="flex items-center gap-4 mb-4">
+							<div className="flex items-center justify-between gap-4 mb-4">
 								<HeroUser
 									name={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()}
 									description={user.email}
@@ -47,7 +47,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 									}}
 								/>
 								<Chip
-									color={getRole(user) === "ADMIN" ? "primary" : "default"}
+									color={getRole(user) === "ADMIN" ? "primary" : "secondary"}
 									variant="flat"
 									className="ml-2 text-base px-4 py-2 ">
 									{getRole(user)}
@@ -60,7 +60,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 										hideSymbol
 										variant="bordered"
 										size="sm"
-										className="mt-1 max-w-full overflow-auto"
+										className="mt-1 max-w-full overflow-auto w-full"
 										copyButtonProps={{ "aria-label": "Copy User ID" }}>
 										{user.id}
 									</Snippet>
@@ -81,7 +81,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 										hideSymbol
 										variant="bordered"
 										size="sm"
-										className="mt-1 max-w-full overflow-auto"
+										className="mt-1 max-w-full overflow-auto w-full"
 										copyButtonProps={{
 											"aria-label": "Copy Payment Identifier",
 										}}>
@@ -96,7 +96,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 										hideSymbol
 										variant="bordered"
 										size="sm"
-										className="mt-1 max-w-full overflow-auto"
+										className="mt-1 max-w-full overflow-auto w-full"
 										copyButtonProps={{ "aria-label": "Copy Public Key" }}>
 										{user.publicKey ?? "-"}
 									</Snippet>
@@ -137,7 +137,7 @@ export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProp
 						</div>
 					)}
 				</ModalBody>
-				<ModalFooter className="flex justify-end border-t pt-3 bg-default-50 rounded-b-2xl">
+				<ModalFooter className="flex justify-end  pt-3 bg-default-50 rounded-b-2xl">
 					<Button
 						onPress={onClose}
 						color="primary"

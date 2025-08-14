@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Tabs, Tab, Input, Button, Spinner, Image, Card, Divider } from "@heroui/react";
 import { UserList } from "@/components/user-list";
 import { UserDetailsCard } from "@/components/user-details-card";
+import { CreateUserModal } from "@/components/create-user-modal";
 import axios from "axios";
 import { IUser } from "@/types/users";
 import { Icon } from "@iconify/react";
@@ -16,6 +17,10 @@ const UsersPage = () => {
 	const [searching, setSearching] = useState(false);
 	const [searchError, setSearchError] = useState<string | null>(null);
 	const [foundUser, setFoundUser] = useState<IUser | null>(null);
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+	const openCreateModal = () => setIsCreateModalOpen(true);
+	const closeCreateModal = () => setIsCreateModalOpen(false);
 
 	const handleSearch = async () => {
 		if (!searchId.trim()) return;
@@ -55,7 +60,15 @@ const UsersPage = () => {
 
 	return (
 		<div className="flex-1 overflow-auto p-6 relative">
-			<h1 className="text-2xl font-semibold mb-6">User Management</h1>
+			<div className="flex items-center justify-between mb-6">
+				<h1 className="text-2xl font-semibold">User Management</h1>
+				<Button
+					color="primary"
+					startContent={<Icon icon="lucide:user-plus" />}
+					onPress={openCreateModal}>
+					Create User
+				</Button>
+			</div>
 			<Tabs
 				selectedKey={selectedTab}
 				onSelectionChange={(key) => setSelectedTab(key as "all" | "single")}
@@ -141,23 +154,31 @@ const UsersPage = () => {
 						)}
 						{/* Step 2: Show user details */}
 						{foundUser && (
-							<div>
+							<div className="relative w-fit mx-auto">
 								<Button
 									radius="sm"
 									variant="bordered"
 									color="primary"
-									className="absolute  top-8 right-5"
+									className="absolute top-3 right-3 z-30"
 									onPress={handleClear}
 									startContent={<Icon icon="lucide:search" />}>
 									Search Again
 								</Button>
-								<Divider className="my-4" />
 								<UserDetailsCard user={foundUser} />
 							</div>
 						)}
 					</div>
 				</Tab>
 			</Tabs>
+			<CreateUserModal
+				isOpen={isCreateModalOpen}
+				onClose={closeCreateModal}
+				onCreated={() => {
+					closeCreateModal();
+					// Optionally refresh users list
+					if (selectedTab === "all") window.location.reload();
+				}}
+			/>
 		</div>
 	);
 };
