@@ -7,6 +7,7 @@ import { useSideBar } from "@/context/SideBarProvider";
 const navigationItems = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/" },
 	{ name: "Users", icon: "lucide:users", href: "/views/users" },
+	{ name: "Business Management", icon: "lucide:briefcase", href: "/views/business" },
 	{ name: "Transactions", icon: "lucide:banknote", href: "/views/transactions" },
 	{ name: "Blocks", icon: "lucide:boxes", href: "/views/blocks" },
 	{ name: "Settings", icon: "lucide:settings", href: "/views/settings" },

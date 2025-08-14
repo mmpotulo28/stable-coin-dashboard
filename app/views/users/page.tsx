@@ -98,7 +98,7 @@ const UsersPage = () => {
 										handleSearch();
 									}}
 									className="w-full flex flex-col gap-4">
-									<div className="flex gap-2 items-center md:flex-row sm:flex-col bg-red-500">
+									<div className="flex gap-2 items-center md:flex-row sm:flex-col">
 										<Input
 											placeholder="Enter user ID..."
 											startContent={<Icon icon="lucide:search" />}
