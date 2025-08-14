@@ -6,6 +6,7 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
+	Link,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import React from "react";
@@ -23,6 +24,12 @@ export function Header() {
 				<Button isIconOnly variant="light">
 					<Icon icon="lucide:search" className="text-xl" />
 				</Button>
+				{/* Docs Icon */}
+				<Link href="/docs" aria-label="Documentation">
+					<Button isIconOnly variant="light">
+						<Icon icon="lucide:book-open" className="text-xl" />
+					</Button>
+				</Link>
 			</div>
 			<div className="flex items-center gap-3">
 				<ThemeSwitcher />
