@@ -46,3 +46,14 @@ export interface IApiTokenCreateResponse {
 export interface IApiTokenRevokeResponse {
 	message: string;
 }
+
+export interface ICharge {
+	id: string;
+	paymentId: string;
+	amount: number;
+	note?: string | null;
+	status: "PENDING" | "COMPLETE";
+	userId: string;
+	createdAt: string;
+	updatedAt: string;
+}

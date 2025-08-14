@@ -11,6 +11,7 @@ const navigationItems = [
 	{ name: "Make Transfer", icon: "lucide:banknote", href: "/views/transfer" },
 	{ name: "Transactions", icon: "lucide:repeat", href: "/views/transactions" },
 	{ name: "API Tokens", icon: "lucide:key", href: "/views/api-tokens" },
+	{ name: "Charges", icon: "lucide:link", href: "/views/charges" }, // <-- Add Charges
 	{ name: "Blocks", icon: "lucide:boxes", href: "/views/blocks" },
 	{ name: "Settings", icon: "lucide:settings", href: "/views/settings" },
 ];
