@@ -10,17 +10,11 @@ import {
 	User,
 	Chip,
 	Spinner,
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	Button,
-	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useStableCoin } from "@/context/StableCoinProvider";
 import { IUser } from "@/types/users";
+import { UserDetailsModal } from "@/components/user-details-modal";
 
 export function UserList({ limit = 10 }) {
 	const { users, loadingUsers, errorUsers } = useStableCoin();
@@ -100,152 +94,20 @@ export function UserList({ limit = 10 }) {
 									: "-"}
 							</TableCell>
 							<TableCell>
-								<Button
-									isIconOnly
-									variant="light"
-									size="sm"
+								<button
+									type="button"
 									aria-label="View user details"
-									onPress={() => handleUserClick(user)}
-									className="hover:bg-default-100">
+									onClick={() => handleUserClick(user)}
+									className="p-2 rounded-md hover:bg-default-100">
 									<Icon icon="lucide:eye" className="text-xl" />
-								</Button>
+								</button>
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
 
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-background">
-				<ModalContent>
-					<ModalHeader className="flex items-center gap-3 border-b pb-3 bg-default-50 rounded-t-2xl">
-						<Icon icon="lucide:user" className="text-3xl text-primary" />
-						<span className="text-xl font-bold">User Details</span>
-					</ModalHeader>
-					<ModalBody>
-						{selectedUser && (
-							<div className="space-y-6">
-								<div className="flex items-center gap-4 mb-4">
-									<User
-										name={`${selectedUser.firstName ?? ""} ${selectedUser.lastName ?? ""}`.trim()}
-										description={selectedUser.email}
-										avatarProps={{
-											src: `https://img.heroui.chat/image/avatar?w=200&h=200&u=${selectedUser.id}`,
-											className: "w-16 h-16",
-										}}
-									/>
-									<Chip
-										color={
-											getRole(selectedUser) === "ADMIN"
-												? "primary"
-												: "default"
-										}
-										variant="flat"
-										className="ml-2 text-base px-4 py-2 ">
-										{getRole(selectedUser)}
-									</Chip>
-								</div>
-								<div className="grid grid-cols-2 gap-4 text-sm">
-									<div>
-										<span className="font-semibold text-default-700">
-											User ID:
-										</span>
-										<Snippet
-											hideSymbol
-											variant="bordered"
-											size="sm"
-											className="mt-1 max-w-full overflow-auto"
-											copyButtonProps={{ "aria-label": "Copy User ID" }}>
-											{selectedUser.id}
-										</Snippet>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Business ID:
-										</span>
-										<div className="text-default-500 break-all">
-											{selectedUser.businessId ?? "-"}
-										</div>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Payment Identifier:
-										</span>
-										<Snippet
-											hideSymbol
-											variant="bordered"
-											size="sm"
-											className="mt-1 max-w-full overflow-auto"
-											copyButtonProps={{
-												"aria-label": "Copy Payment Identifier",
-											}}>
-											{selectedUser.paymentIdentifier ?? "-"}
-										</Snippet>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Public Key:
-										</span>
-										<Snippet
-											hideSymbol
-											variant="bordered"
-											size="sm"
-											className="mt-1 max-w-full overflow-auto"
-											copyButtonProps={{ "aria-label": "Copy Public Key" }}>
-											{selectedUser.publicKey ?? "-"}
-										</Snippet>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Pay Enabled:
-										</span>
-										<div>
-											<Chip
-												color={
-													selectedUser.enabledPay ? "success" : "danger"
-												}
-												variant="dot">
-												{selectedUser.enabledPay ? "Enabled" : "Disabled"}
-											</Chip>
-										</div>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Created At:
-										</span>
-										<div className="text-default-500">
-											{selectedUser.createdAt
-												? new Date(selectedUser.createdAt).toLocaleString()
-												: "-"}
-										</div>
-									</div>
-									<div>
-										<span className="font-semibold text-default-700">
-											Updated At:
-										</span>
-										<div className="text-default-500">
-											{selectedUser.updatedAt
-												? new Date(selectedUser.updatedAt).toLocaleString()
-												: "-"}
-										</div>
-									</div>
-								</div>
-							</div>
-						)}
-					</ModalBody>
-					<ModalFooter className="flex justify-end border-t pt-3 bg-default-50 rounded-b-2xl">
-						<Button
-							onPress={closeModal}
-							color="primary"
-							variant="flat"
-							className="px-6 py-2 rounded-lg font-semibold">
-							Close
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+			<UserDetailsModal user={selectedUser} isOpen={isModalOpen} onClose={closeModal} />
 		</>
 	);
 }
