@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Link, Button, User } from "@heroui/react";
+import { Link, Button, User, Chip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useSideBar } from "@/context/SideBarProvider";
 import { useUser, SignedIn, OrganizationSwitcher } from "@clerk/nextjs";
@@ -9,10 +9,10 @@ const navigationItems = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/dashboard" },
 	{ name: "User Management", icon: "lucide:users", href: "/dashboard/users" },
 	{ name: "Business Management", icon: "lucide:briefcase", href: "/dashboard/business" },
-	{ name: "Make Transfer", icon: "lucide:banknote", href: "/dashboard/transfer" },
+	{ name: "Make Transfer", icon: "lucide:banknote", href: "/dashboard/transfer", pro: true },
 	{ name: "Transactions", icon: "lucide:repeat", href: "/dashboard/transactions" },
 	{ name: "API Tokens", icon: "lucide:key", href: "/dashboard/api-tokens" },
-	{ name: "Charges", icon: "lucide:link", href: "/dashboard/charges" },
+	{ name: "Charges", icon: "lucide:link", href: "/dashboard/charges", pro: true },
 	{ name: "Blocks", icon: "lucide:boxes", href: "/dashboard/blocks" },
 	{ name: "Settings", icon: "lucide:settings", href: "/dashboard/settings" },
 ];
@@ -61,7 +61,20 @@ export function SidebarNavigation() {
 							icon={item.icon}
 							className="text-xl group-hover:text-primary transition-colors"
 						/>
-						{isSidebarOpen && <span className="truncate">{item.name}</span>}
+						{isSidebarOpen && (
+							<>
+								<span className="text-nowrap">{item.name}</span>
+								{item.pro && (
+									<Chip
+										color="secondary"
+										variant="bordered"
+										size="sm"
+										className="ml-2 px-2 py-0 text-xs font-bold">
+										PRO
+									</Chip>
+								)}
+							</>
+						)}
 					</Link>
 				))}
 			</nav>
