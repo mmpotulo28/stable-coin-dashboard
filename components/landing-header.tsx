@@ -8,7 +8,7 @@ export function LandingHeader() {
 	const router = useRouter();
 
 	return (
-		<header className="w-full px-8 py-6 flex items-center justify-between bg-white/10 backdrop-blur-xl shadow-lg sticky top-0 z-30">
+		<header className="w-full px-8 py-6 flex items-center justify-between bg-white/10 backdrop-blur-xl shadow-lg  z-30">
 			<Link href="/" className="flex items-center gap-3">
 				<Icon icon="lucide:rocket" className="text-4xl text-primary animate-spin-slow " />
 				<span className="font-extrabold text-3xl tracking-tight text-primary ">
