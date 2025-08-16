@@ -1,3 +1,4 @@
+"use client";
 import { StatsCard } from "@/components/stats-card";
 import { UserList } from "@/components/users/user-list";
 import React from "react";
@@ -38,7 +39,7 @@ const revenueData = [
 	{ month: "Jul", revenue: 15000 },
 ];
 
-export function Dashboard() {
+const Dashboard = () => {
 	return (
 		<div className="flex-1 p-6 space-y-8">
 			<div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -142,4 +143,6 @@ export function Dashboard() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Dashboard;

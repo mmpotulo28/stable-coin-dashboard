@@ -6,15 +6,15 @@ import { useSideBar } from "@/context/SideBarProvider";
 import { useUser, SignedIn } from "@clerk/nextjs";
 
 const navigationItems = [
-	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/" },
-	{ name: "User Management", icon: "lucide:users", href: "/views/users" },
-	{ name: "Business Management", icon: "lucide:briefcase", href: "/views/business" },
-	{ name: "Make Transfer", icon: "lucide:banknote", href: "/views/transfer" },
-	{ name: "Transactions", icon: "lucide:repeat", href: "/views/transactions" },
-	{ name: "API Tokens", icon: "lucide:key", href: "/views/api-tokens" },
-	{ name: "Charges", icon: "lucide:link", href: "/views/charges" },
-	{ name: "Blocks", icon: "lucide:boxes", href: "/views/blocks" },
-	{ name: "Settings", icon: "lucide:settings", href: "/views/settings" },
+	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/dashboard" },
+	{ name: "User Management", icon: "lucide:users", href: "/dashboard/users" },
+	{ name: "Business Management", icon: "lucide:briefcase", href: "/dashboard/business" },
+	{ name: "Make Transfer", icon: "lucide:banknote", href: "/dashboard/transfer" },
+	{ name: "Transactions", icon: "lucide:repeat", href: "/dashboard/transactions" },
+	{ name: "API Tokens", icon: "lucide:key", href: "/dashboard/api-tokens" },
+	{ name: "Charges", icon: "lucide:link", href: "/dashboard/charges" },
+	{ name: "Blocks", icon: "lucide:boxes", href: "/dashboard/blocks" },
+	{ name: "Settings", icon: "lucide:settings", href: "/dashboard/settings" },
 ];
 
 export function SidebarNavigation() {

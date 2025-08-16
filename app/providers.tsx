@@ -24,7 +24,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 	const router = useRouter();
 
 	return (
-		<ClerkProvider signInUrl="/auth/sign-in" signUpUrl="/auth/sign-up">
+		<ClerkProvider
+			signInUrl="/auth/sign-in"
+			signUpUrl="/auth/sign-up"
+			afterSignOutUrl="/"
+			signInFallbackRedirectUrl="/dashboard"
+			signUpFallbackRedirectUrl="/dashboard">
 			<HeroUIProvider navigate={router.push}>
 				<NextThemesProvider {...themeProps}>
 					<ToastProvider />
