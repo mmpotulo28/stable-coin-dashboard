@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<Header />
 
 							{/* Page Content */}
-							{children}
+							<section className="flex-1 overflow-auto">{children}</section>
 						</main>
 					</div>
 				</Providers>
