@@ -10,7 +10,7 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useCharges } from "@/hooks/useCharges";
+import { useLiskCharges } from "@/hooks/useLiskCharges";
 
 export function CreateChargeModal({
 	isOpen,
@@ -21,7 +21,7 @@ export function CreateChargeModal({
 	onClose: () => void;
 	userId: string;
 }) {
-	const { createCharge, createLoading, createError, createdCharge } = useCharges();
+	const { createCharge, createLoading, createError, createdCharge } = useLiskCharges();
 	const [paymentId, setPaymentId] = useState("");
 	const [amount, setAmount] = useState("");
 	const [note, setNote] = useState("");

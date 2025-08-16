@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Card,
 	CardHeader,
@@ -24,25 +24,48 @@ export default function SettingsPage() {
 	const { theme, setTheme } = useTheme();
 	const { user } = useUser();
 	const [apiBase, setApiBase] = useState(process.env.NEXT_PUBLIC_API_BASE || "");
-	const [apiToken, setApiToken] = useState(process.env.NEXT_PUBLIC_API_TOKEN || "");
-	const [apiKey, setApiKey] = useState("");
-	const [apiKeyLinked, setApiKeyLinked] = useState(false);
+	const [businessName, setBusinessName] = useState<string>("");
+	const [businessDesc, setBusinessDesc] = useState<string>("");
+	const [apiToken, setApiToken] = useState<string>("");
 	const [saving, setSaving] = useState(false);
 	const [saveMsg, setSaveMsg] = useState<string | null>(null);
 	const [clearMsg, setClearMsg] = useState<string | null>(null);
 	const [logoutMsg, setLogoutMsg] = useState<string | null>(null);
-	const [apiKeyMsg, setApiKeyMsg] = useState<string | null>(null);
 	const router = useRouter();
+
+	useEffect(() => {
+		if (user) {
+			setApiToken((user.unsafeMetadata.apiToken as string) || "");
+			setBusinessName((user.unsafeMetadata.businessName as string) || "");
+			setBusinessDesc((user.unsafeMetadata.businessDesc as string) || "");
+		}
+	}, [user]);
 
 	const handleThemeChange = (val: string) => setTheme(val);
 
 	const handleSaveEnv = async () => {
 		setSaving(true);
 		setSaveMsg(null);
-		setTimeout(() => {
-			setSaving(false);
+
+		try {
+			await user?.update({
+				unsafeMetadata: {
+					apiToken,
+					businessName,
+					businessDesc,
+					onboarded: true,
+				},
+			});
+
 			setSaveMsg("Settings saved! (Note: Environment changes require a restart)");
-		}, 1200);
+		} catch (error) {
+			setSaveMsg("Failed to save onboarding info.");
+		} finally {
+			setTimeout(() => {
+				setSaving(false);
+				setSaveMsg(null);
+			}, 1200);
+		}
 	};
 
 	const handleClearLocalStorage = () => {
@@ -69,73 +92,13 @@ export default function SettingsPage() {
 		}, 1200);
 	};
 
-	const handleLinkApiKey = async () => {
-		// Simulate linking API key to Clerk user (replace with real API call)
-		setApiKeyMsg(null);
-		if (!apiKey.trim()) {
-			setApiKeyMsg("API key required.");
-			return;
-		}
-		// Here you would POST to your backend to link the API key with the Clerk userId
-		setTimeout(() => {
-			setApiKeyLinked(true);
-			setApiKeyMsg("API key linked to your account!");
-		}, 1000);
-	};
-
 	return (
 		<div className="flex-1 overflow-auto p-6 space-y-8">
 			<h1 className="text-2xl font-semibold mb-6 flex items-center gap-2">
 				<Icon icon="lucide:settings" />
 				Settings
 			</h1>
-			<Card className="max-w-2xl mx-auto mb-8">
-				<CardHeader>
-					<div className="flex items-center gap-2">
-						<Icon icon="lucide:user-check" className="text-xl" />
-						<span className="font-semibold">Account Linking</span>
-						<Tooltip content="Link your Clerk account to an API key for app access">
-							<Icon icon="lucide:info" className="text-default-400 text-base" />
-						</Tooltip>
-					</div>
-				</CardHeader>
-				<CardBody>
-					{user ? (
-						<form
-							onSubmit={(e) => {
-								e.preventDefault();
-								handleLinkApiKey();
-							}}
-							className="space-y-4">
-							<Input
-								label="API Key"
-								value={apiKey}
-								onChange={(e) => setApiKey(e.target.value)}
-								placeholder="Paste your API key here"
-								isRequired
-								disabled={apiKeyLinked}
-							/>
-							<Button
-								color="primary"
-								type="submit"
-								isDisabled={apiKeyLinked || !apiKey.trim()}
-								startContent={<Icon icon="lucide:link" />}>
-								{apiKeyLinked ? "Linked" : "Link API Key"}
-							</Button>
-							{apiKeyMsg && (
-								<div
-									className={
-										apiKeyLinked ? "text-success mt-2" : "text-danger mt-2"
-									}>
-									{apiKeyMsg}
-								</div>
-							)}
-						</form>
-					) : (
-						<div className="text-default-500">Sign in to link your API key.</div>
-					)}
-				</CardBody>
-			</Card>
+
 			<Card className="max-w-2xl mx-auto mb-8">
 				<CardHeader>
 					<div className="flex items-center gap-2">
@@ -186,18 +149,32 @@ export default function SettingsPage() {
 							disabled
 						/>
 						<Input
-							label="API Token"
+							label="API Key"
 							value={apiToken}
 							onChange={(e) => setApiToken(e.target.value)}
 							placeholder="Bearer ..."
 							isRequired
 							type="password"
 						/>
+						<Input
+							label="Business Name"
+							value={businessName}
+							onChange={(e) => setBusinessName(e.target.value)}
+							placeholder="Your business name"
+							isRequired
+						/>
+						<Input
+							label="Business Description"
+							value={businessDesc}
+							onChange={(e) => setBusinessDesc(e.target.value)}
+							placeholder="A brief description of your business"
+							isRequired
+						/>
 						<Button
 							color="primary"
 							type="submit"
 							isLoading={saving}
-							isDisabled={saving || !apiBase || !apiToken}
+							isDisabled={saving}
 							startContent={<Icon icon="lucide:save" />}>
 							{saving ? <Spinner size="sm" /> : "Save"}
 						</Button>

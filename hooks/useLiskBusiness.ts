@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { IUserTokenBalance } from "@/types/users";
+import { useUser } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 function setCache(key: string, value: any) {
 	Cookies.set(key, JSON.stringify({ value, ts: Date.now() }), { expires: 1 / 1440 }); // 1 min
@@ -24,6 +24,7 @@ function getCache(key: string) {
 }
 
 export function useLiskBusiness() {
+	const { user } = useUser();
 	const [float, setFloat] = useState<IUserTokenBalance[]>([]);
 	const [loadingFloat, setLoadingFloat] = useState(false);
 	const [floatError, setFloatError] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export function useLiskBusiness() {
 		}
 		try {
 			const { data } = await axios.get<{ tokens: IUserTokenBalance[] }>(`${API_BASE}/float`, {
-				headers: { Authorization: API_TOKEN },
+				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
 			});
 			setFloat(data.tokens || []);
 			setCache(cacheKey, data.tokens || []);
@@ -82,7 +83,7 @@ export function useLiskBusiness() {
 			await axios.post(
 				`${API_BASE}/enable-gas`,
 				{},
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setGasSuccess("Gas allocation successful.");
 		} catch (err: any) {
@@ -101,7 +102,7 @@ export function useLiskBusiness() {
 			await axios.post(
 				`${API_BASE}/activate-pay/${userId}`,
 				{},
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setUserGasSuccess("Gas payment activated successfully for user.");
 		} catch (err: any) {
@@ -128,7 +129,7 @@ export function useLiskBusiness() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);
@@ -161,7 +162,7 @@ export function useLiskBusiness() {
 				pageSize: number;
 				totalPages: number;
 			}>(`${API_BASE}/transactions/pending?page=${page}&pageSize=${pageSize}`, {
-				headers: { Authorization: API_TOKEN },
+				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
 			});
 			setPendingTx(data);
 			setCache(cacheKey, data);

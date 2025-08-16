@@ -1,11 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { IUserTokenBalance, IUserTransaction } from "@/types/users";
+import { useUser } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 export function useLiskTransactions() {
+	const { user } = useUser();
 	const [balances, setBalances] = useState<IUserTokenBalance[]>([]);
 	const [balancesLoading, setBalancesLoading] = useState(false);
 	const [balancesError, setBalancesError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<{ tokens: IUserTokenBalance[] }>(
 				`${API_BASE}/${userId}/balance`,
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setBalances(data.tokens || []);
 		} catch (err: any) {
@@ -43,7 +44,7 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<{ transactions: IUserTransaction[] }>(
 				`${API_BASE}/${userId}/transactions`,
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setTransactions(data.transactions || []);
 		} catch (err: any) {
@@ -61,7 +62,7 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<IUserTransaction>(
 				`${API_BASE}/${userId}/transactions/${transactionId}`,
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setTransaction(data);
 		} catch (err: any) {

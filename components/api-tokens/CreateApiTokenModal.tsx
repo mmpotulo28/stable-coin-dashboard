@@ -11,10 +11,10 @@ import {
 	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useApiTokens } from "@/hooks/useApiTokens";
+import { useLiskApiTokens } from "@/hooks/useLiskApiTokens";
 
 export function CreateApiTokenModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-	const { createToken, createLoading, createError, createdToken } = useApiTokens();
+	const { createToken, createLoading, createError, createdToken } = useLiskApiTokens();
 	const [desc, setDesc] = useState("");
 
 	const handleSubmit = async (e: React.FormEvent) => {

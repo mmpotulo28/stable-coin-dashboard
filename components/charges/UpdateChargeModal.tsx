@@ -13,7 +13,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { ICharge } from "@/types/users";
-import { useCharges } from "@/hooks/useCharges";
+import { useLiskCharges } from "@/hooks/useLiskCharges";
 
 export function UpdateChargeModal({
 	isOpen,
@@ -28,7 +28,7 @@ export function UpdateChargeModal({
 	charge: ICharge | null;
 	onUpdated?: () => void;
 }) {
-	const { updateCharge, updateLoading, updateError } = useCharges();
+	const { updateCharge, updateLoading, updateError } = useLiskCharges();
 	const [note, setNote] = useState("");
 	const [status, setStatus] = useState<"PENDING" | "COMPLETE">("PENDING");
 

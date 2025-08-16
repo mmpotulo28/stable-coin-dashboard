@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ToastProvider } from "@heroui/react";
 import { SideBarProvider } from "@/context/SideBarProvider";
-import { StableCoinProvider } from "@/context/StableCoinProvider";
-import { ClerkProvider } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { useUser, ClerkProvider } from "@clerk/nextjs";
+import OnboardingModal from "@/components/onboarding-modal";
 
 export interface ProvidersProps {
 	children: React.ReactNode;
@@ -18,6 +19,36 @@ declare module "@react-types/shared" {
 	interface RouterConfig {
 		routerOptions: NonNullable<Parameters<ReturnType<typeof useRouter>["push"]>[1]>;
 	}
+}
+
+function OnboardingCheck({ children }: { children: React.ReactNode }) {
+	const { user, isLoaded } = useUser();
+	const [showModal, setShowModal] = useState(false);
+
+	useEffect(() => {
+		if (!isLoaded || !user) return;
+		const skipUntil = localStorage.getItem("onboarding_skip_until");
+		const skipActive = skipUntil && Date.now() < Number(skipUntil);
+
+		const meta = user.unsafeMetadata || {};
+		const needsOnboarding =
+			!meta.onboarded || !meta.apiToken || !meta.businessName || !meta.businessDesc;
+
+		setTimeout(() => {
+			setShowModal(!skipActive && needsOnboarding);
+		}, 1000);
+	}, [user, isLoaded]);
+
+	if (showModal && user) {
+		return (
+			<>
+				{children}
+				<OnboardingModal user={user} onComplete={() => setShowModal(false)} />
+			</>
+		);
+	}
+
+	return <>{children}</>;
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
@@ -53,7 +84,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 				<NextThemesProvider {...themeProps}>
 					<ToastProvider />
 					<SideBarProvider>
-						<StableCoinProvider>{children}</StableCoinProvider>
+						<OnboardingCheck>{children}</OnboardingCheck>
 					</SideBarProvider>
 				</NextThemesProvider>
 			</HeroUIProvider>

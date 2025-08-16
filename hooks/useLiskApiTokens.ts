@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import axios from "axios";
 import { IApiToken, IApiTokenCreateResponse, IApiTokenRevokeResponse } from "@/types/users";
+import { useUser } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
-export function useApiTokens() {
+export function useLiskApiTokens() {
+	const { user } = useUser();
 	const [tokens, setTokens] = useState<IApiToken[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -26,7 +27,7 @@ export function useApiTokens() {
 		setError(null);
 		try {
 			const { data } = await axios.get<IApiToken[]>(`${API_BASE}/tokens`, {
-				headers: { Authorization: API_TOKEN },
+				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
 			});
 			setTokens(data);
 		} catch (err: any) {
@@ -47,7 +48,7 @@ export function useApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);
@@ -70,7 +71,7 @@ export function useApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);
@@ -93,7 +94,7 @@ export function useApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);

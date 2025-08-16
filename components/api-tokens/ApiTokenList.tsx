@@ -15,8 +15,7 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IApiToken } from "@/types/users";
-import { useApiTokens } from "@/hooks/useApiTokens";
+import { useLiskApiTokens } from "@/hooks/useLiskApiTokens";
 
 export function ApiTokenList() {
 	const {
@@ -31,7 +30,7 @@ export function ApiTokenList() {
 		revokeError,
 		revokeSuccess,
 		fetchTokens,
-	} = useApiTokens();
+	} = useLiskApiTokens();
 
 	const [editId, setEditId] = useState<string | null>(null);
 	const [editDesc, setEditDesc] = useState("");

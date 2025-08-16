@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
 	Table,
 	TableHeader,
@@ -18,18 +18,22 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useStableCoin } from "@/context/StableCoinProvider";
 import { IUser } from "@/types/users";
 import { UserDetailsModal } from "@/components/users/user-details-modal";
 import { UpdateUserModal } from "@/components/users/update-user-modal";
 import { DeleteUserModal } from "@/components/users/delete-user-modal";
+import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 export function UserList({ limit = 10 }) {
-	const { users, loadingUsers, errorUsers, fetchUsers } = useStableCoin();
+	const { users, loadingUsers, errorUsers, fetchUsers } = useLiskUsers();
 	const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const getRole = (user: IUser) => user.role || "CUSTOMER";
 

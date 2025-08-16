@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import { useUser } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 export interface ICharge {
 	id: string;
@@ -15,7 +15,8 @@ export interface ICharge {
 	updatedAt: string;
 }
 
-export function useCharges() {
+export function useLiskCharges() {
+	const { user } = useUser();
 	const [charges, setCharges] = useState<ICharge[]>([]);
 	const [chargesLoading, setChargesLoading] = useState(false);
 	const [chargesError, setChargesError] = useState<string | null>(null);
@@ -57,7 +58,7 @@ export function useCharges() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);
@@ -79,7 +80,7 @@ export function useCharges() {
 		try {
 			const { data } = await axios.get<{ charges: ICharge[] }>(
 				`${API_BASE}/charge/${userId}`,
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setCharges(data.charges || []);
 		} catch (err: any) {
@@ -98,7 +99,7 @@ export function useCharges() {
 		setCharge(null);
 		try {
 			const { data } = await axios.get<ICharge>(`${API_BASE}/retrieve-charge/${chargeId}`, {
-				headers: { Authorization: API_TOKEN },
+				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
 			});
 			setCharge(data);
 		} catch (err: any) {
@@ -132,7 +133,7 @@ export function useCharges() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
 					},
 				},
 			);
@@ -156,7 +157,7 @@ export function useCharges() {
 		try {
 			const { data } = await axios.delete<{ message: string }>(
 				`${API_BASE}/charge/${userId}/${chargeId}/delete`,
-				{ headers: { Authorization: API_TOKEN } },
+				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
 			);
 			setDeleteSuccess(data.message || "Charge deleted");
 			return data;

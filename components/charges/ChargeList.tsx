@@ -15,9 +15,8 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { ICharge } from "@/types/users";
-import { useCharges } from "@/hooks/useCharges";
 import { UpdateChargeModal } from "@/components/charges/UpdateChargeModal";
+import { useLiskCharges } from "@/hooks/useLiskCharges";
 
 export function ChargeList({ userId }: { userId: string }) {
 	const {
@@ -29,7 +28,7 @@ export function ChargeList({ userId }: { userId: string }) {
 		deleteLoading,
 		deleteError,
 		deleteSuccess,
-	} = useCharges();
+	} = useLiskCharges();
 
 	const [search, setSearch] = useState("");
 	const [deleteId, setDeleteId] = useState<string | null>(null);

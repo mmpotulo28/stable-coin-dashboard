@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { Link, Button } from "@heroui/react";
+import { Link, Button, User } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useSideBar } from "@/context/SideBarProvider";
-import { useUser, SignedIn } from "@clerk/nextjs";
+import { useUser, SignedIn, OrganizationSwitcher } from "@clerk/nextjs";
 
 const navigationItems = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/dashboard" },
@@ -66,17 +66,9 @@ export function SidebarNavigation() {
 				))}
 			</nav>
 			{/* Footer */}
-			<div className="mt-auto px-4 py-4 border-t border-default-200 flex items-center gap-2">
+			<div className="mt-auto px-4 py-4 border-t border-default-200 flex flex-col items-center gap-2">
 				<SignedIn>
-					<Icon icon="lucide:user" className="text-lg text-default-400" />
-					{isSidebarOpen && user && (
-						<div className="flex flex-col">
-							<span className="text-sm font-semibold text-default-700">
-								{user.emailAddresses[0]?.emailAddress}
-							</span>
-							<span className="text-xs text-default-400">{user.fullName}</span>
-						</div>
-					)}
+					<OrganizationSwitcher />
 				</SignedIn>
 			</div>
 		</aside>
