@@ -47,7 +47,7 @@ export default function SignInPage() {
 							<h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-success animate-gradient text-center drop-shadow-glow">
 								Welcome Back
 							</h2>
-							<p className="text-default-200 text-center max-w-xs font-medium drop-shadow-glow">
+							<p className=" text-center max-w-xs font-medium ">
 								Sign in to access your dashboard. Your data is protected with
 								industry-leading security.
 							</p>
@@ -79,28 +79,16 @@ export default function SignInPage() {
 						</div>
 					</div>
 					{/* Right: Sign In Form */}
-					<div className="flex-1 flex flex-col justify-center p-0 bg-background relative">
-						<div className="clerk-signin-wrapper flex flex-col items-center justify-center">
-							<SignIn
-								appearance={{
-									elements: {
-										formButtonPrimary:
-											"bg-gradient-to-r from-primary to-success text-white rounded-xl py-2 px-4 font-bold shadow-lg hover:scale-105 transition-transform duration-200 border-2 border-primary/40",
-										card: "bg-white/10 backdrop-blur-2xl border border-primary/30 shadow-2xl rounded-2xl p-8 glass-card-glow",
-										headerTitle:
-											"text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-success animate-gradient mb-4 text-center drop-shadow-glow",
-										headerSubtitle: "text-default-400 mb-4 text-center",
-										formFieldInput:
-											"bg-background/80 border border-default-200 rounded-lg px-3 py-2 text-default-800 focus:border-primary focus:ring-2 focus:ring-primary/30 shadow-md",
-										formFieldLabel: "text-default-700 font-semibold mb-2",
-										formFieldError: "text-danger text-sm mt-1",
-										footerActionText: "text-default-500",
-										footerActionLink: "text-primary underline font-semibold",
-										identityPreview: "bg-default-100 rounded-md px-2 py-1",
-									},
-								}}
-							/>
-						</div>
+					<div className="flex-1 flex flex-col items-center justify-center p-0 bg-background relative">
+						<SignIn
+							oauthFlow="popup"
+							appearance={{
+								elements: {
+									formButtonPrimary:
+										"bg-gradient-to-r from-primary to-success text-white rounded-xl py-2 px-4 font-bold shadow-lg hover:scale-105 transition-transform duration-200 border-2 border-primary/40",
+								},
+							}}
+						/>
 					</div>
 				</Card>
 			</div>
