@@ -17,7 +17,7 @@ import {
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { PricingTable, useUser } from "@clerk/nextjs";
 import jsonPackage from "@/package.json";
 
 export default function SettingsPage() {
@@ -123,6 +123,11 @@ export default function SettingsPage() {
 					</div>
 				</CardBody>
 			</Card>
+
+			<Card className="max-w-2xl mx-auto mb-8 shadow bg-background">
+				<PricingTable forOrganizations />
+			</Card>
+
 			<Card className="max-w-2xl mx-auto mb-8">
 				<CardHeader>
 					<div className="flex items-center gap-2">
@@ -231,6 +236,7 @@ export default function SettingsPage() {
 					</div>
 				</CardBody>
 			</Card>
+
 			<Card className="max-w-2xl mx-auto mb-8">
 				<CardHeader>
 					<div className="flex items-center gap-2">
