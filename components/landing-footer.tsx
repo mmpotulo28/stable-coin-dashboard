@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 
 export function LandingFooter() {
 	return (
-		<footer className="w-full py-8 mt-auto bg-gradient-to-r from-primary/10 to-success/10 flex flex-col items-center gap-2 backdrop-blur-xl">
+		<footer className="w-full py-8 mt-auto bg-background flex flex-col items-center gap-2 backdrop-blur-xl">
 			<div className="flex gap-2 items-center">
 				<Icon icon="lucide:rocket" className="text-2xl text-primary animate-spin-slow" />
 				<span className="font-semibold text-default-200">Stable Coin Dashboard</span>
