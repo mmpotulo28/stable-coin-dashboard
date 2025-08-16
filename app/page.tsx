@@ -24,18 +24,21 @@ const features = [
 		title: "Transfers",
 		desc: "Find recipients, make single or batch transfers securely.",
 		color: "warning",
+		isPro: true,
+	},
+
+	{
+		icon: "lucide:key",
+		title: "API Tokens",
+		desc: "Create, update, revoke, and search API tokens for integrations.",
+		color: "default",
 	},
 	{
 		icon: "lucide:link",
 		title: "Charges",
 		desc: "Create payment requests, view, update, and delete charges for users.",
 		color: "secondary",
-	},
-	{
-		icon: "lucide:key",
-		title: "API Tokens",
-		desc: "Create, update, revoke, and search API tokens for integrations.",
-		color: "default",
+		isPro: true,
 	},
 	{
 		icon: "lucide:repeat",
@@ -142,6 +145,15 @@ export default function LandingPage() {
 									className={`text-3xl text-${f.color} drop-shadow-glow`}
 								/>
 								<span className="font-semibold text-lg">{f.title}</span>
+								{f.isPro && (
+									<Chip
+										color="secondary"
+										variant="bordered"
+										size="sm"
+										className="ml-2 px-2 py-0 text-xs font-bold">
+										PRO
+									</Chip>
+								)}
 							</CardHeader>
 							<CardBody>
 								<p className="text-default-500 text-sm">{f.desc}</p>
