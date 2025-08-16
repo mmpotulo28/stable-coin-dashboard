@@ -11,46 +11,69 @@ const navigationItems = [
 	{ name: "Make Transfer", icon: "lucide:banknote", href: "/views/transfer" },
 	{ name: "Transactions", icon: "lucide:repeat", href: "/views/transactions" },
 	{ name: "API Tokens", icon: "lucide:key", href: "/views/api-tokens" },
-	{ name: "Charges", icon: "lucide:link", href: "/views/charges" }, // <-- Add Charges
+	{ name: "Charges", icon: "lucide:link", href: "/views/charges" },
 	{ name: "Blocks", icon: "lucide:boxes", href: "/views/blocks" },
 	{ name: "Settings", icon: "lucide:settings", href: "/views/settings" },
 ];
 
 export function SidebarNavigation() {
 	const { isSidebarOpen, toggleSidebar } = useSideBar();
+
 	return (
 		<aside
-			className={`bg-background border-default-200 border-r fixed lg:static top-0 left-0 h-full z-40 transition-transform duration-300 ${
-				isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-			}`}>
-			<div
-				className={`flex flex-col h-full ${isSidebarOpen ? "w-64" : "w-16"} transition-all duration-300`}>
-				<div className="flex items-center justify-between p-4">
-					<div className={`flex items-center gap-2 ${isSidebarOpen ? "" : "hidden"}`}>
-						<Icon icon="lucide:boxes" className="text-2xl" />
-						<span className="font-bold text-xl">Dashboard</span>
+			className={`fixed lg:static top-0 left-0 h-full z-40 transition-all duration-300 bg-gradient-to-br from-default-50 to-default-100 border-r border-default-200 shadow-lg ${
+				isSidebarOpen ? "w-64" : "w-20"
+			} flex flex-col`}>
+			{/* Logo & Collapse Button */}
+			<div className="flex items-center justify-between px-4 py-5 border-b border-default-200">
+				<Link href="/" className="flex items-center gap-2">
+					<Icon icon="lucide:rocket" className="text-2xl text-primary" />
+					{isSidebarOpen && (
+						<span className="font-bold text-xl tracking-tight text-primary">
+							StableCoin
+						</span>
+					)}
+				</Link>
+				<Button
+					isIconOnly
+					variant="light"
+					onPress={toggleSidebar}
+					className="lg:hidden"
+					aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}>
+					<Icon
+						icon={isSidebarOpen ? "lucide:chevron-left" : "lucide:chevron-right"}
+						className="text-xl"
+					/>
+				</Button>
+			</div>
+			{/* Navigation */}
+			<nav className="flex-1 flex flex-col gap-1 py-4 px-2">
+				{navigationItems.map((item) => (
+					<Link
+						key={item.name}
+						href={item.href}
+						className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-150 hover:bg-primary/10 hover:text-primary ${
+							isSidebarOpen ? "justify-start" : "justify-center"
+						} text-default-700 font-medium`}>
+						<Icon
+							icon={item.icon}
+							className="text-xl group-hover:text-primary transition-colors"
+						/>
+						{isSidebarOpen && <span className="truncate">{item.name}</span>}
+					</Link>
+				))}
+			</nav>
+			{/* Footer */}
+			<div className="mt-auto px-4 py-4 border-t border-default-200 flex items-center gap-2">
+				<Icon icon="lucide:user" className="text-lg text-default-400" />
+				{isSidebarOpen && (
+					<div className="flex flex-col">
+						<span className="text-sm font-semibold text-default-700">
+							john@example.com
+						</span>
+						<span className="text-xs text-default-400">Admin</span>
 					</div>
-					<Button
-						isIconOnly
-						variant="light"
-						onPress={toggleSidebar}
-						className={isSidebarOpen ? "lg:hidden" : "hidden"}>
-						<Icon icon="lucide:x" className="text-xl" />
-					</Button>
-				</div>
-				<div className="flex flex-col gap-1 p-2">
-					{navigationItems.map((item) => (
-						<Link
-							key={item.name}
-							href={item.href}
-							className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-default-100 ${
-								isSidebarOpen ? "" : "justify-center"
-							}`}>
-							<Icon icon={item.icon} className="text-xl" />
-							{isSidebarOpen && <span>{item.name}</span>}
-						</Link>
-					))}
-				</div>
+				)}
 			</div>
 		</aside>
 	);
