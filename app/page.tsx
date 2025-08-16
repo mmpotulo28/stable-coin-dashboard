@@ -89,7 +89,7 @@ export default function LandingPage() {
 					<h1 className="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-success animate-gradient">
 						Future of Stablecoin Management
 					</h1>
-					<p className="text-xl text-default-200 max-w-xl mb-4 font-medium drop-shadow-glow">
+					<p className="text-xl max-w-xl mb-4 font-medium ">
 						Experience next-gen dashboard for users, businesses, transfers, charges,
 						tokens, and transactions. Fast, secure, and scalable.
 					</p>
