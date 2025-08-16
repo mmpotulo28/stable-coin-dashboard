@@ -1,11 +1,13 @@
 import "@/styles/globals.css";
 import { Metadata } from "next";
 import clsx from "clsx";
-import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { SidebarNavigation } from "@/components/sidebar-navigation";
 import { Header } from "@/components/header";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import UnAuthorizedContent from "@/components/UnAuthorizedContent";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
 	title: {
@@ -28,18 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					fontSans.variable,
 				)}>
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-					<div className="bg-default-50 flex h-screen">
-						{/* Sidebar */}
-						<SidebarNavigation />
-
-						{/* Main Content */}
-						<main className="flex flex-1 flex-col overflow-hidden">
-							<Header />
-
-							{/* Page Content */}
-							<section className="flex-1 overflow-auto">{children}</section>
-						</main>
-					</div>
+					{children}
 				</Providers>
 			</body>
 		</html>

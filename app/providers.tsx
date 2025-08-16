@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ToastProvider } from "@heroui/react";
 import { SideBarProvider } from "@/context/SideBarProvider";
 import { StableCoinProvider } from "@/context/StableCoinProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export interface ProvidersProps {
 	children: React.ReactNode;
@@ -23,13 +24,15 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 	const router = useRouter();
 
 	return (
-		<HeroUIProvider navigate={router.push}>
-			<NextThemesProvider {...themeProps}>
-				<ToastProvider />
-				<SideBarProvider>
-					<StableCoinProvider>{children}</StableCoinProvider>
-				</SideBarProvider>
-			</NextThemesProvider>
-		</HeroUIProvider>
+		<ClerkProvider signInUrl="/auth/sign-in" signUpUrl="/auth/sign-up">
+			<HeroUIProvider navigate={router.push}>
+				<NextThemesProvider {...themeProps}>
+					<ToastProvider />
+					<SideBarProvider>
+						<StableCoinProvider>{children}</StableCoinProvider>
+					</SideBarProvider>
+				</NextThemesProvider>
+			</HeroUIProvider>
+		</ClerkProvider>
 	);
 }
