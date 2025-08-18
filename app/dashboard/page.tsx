@@ -5,39 +5,7 @@ import React from "react";
 import { Card, CardHeader, CardBody, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { DashboardChart } from "@/components/DashboardChart";
-
-// Example sales data for the chart
-const salesData = [
-	{ month: "Jan", sales: 12000 },
-	{ month: "Feb", sales: 3000 },
-	{ month: "Mar", sales: 2000 },
-	{ month: "Apr", sales: 2780 },
-	{ month: "May", sales: 1890 },
-	{ month: "Jun", sales: 2390 },
-	{ month: "Jul", sales: 3490 },
-];
-
-// Dummy user growth data
-const userGrowthData = [
-	{ month: "Jan", users: 800 },
-	{ month: "Feb", users: 900 },
-	{ month: "Mar", users: 950 },
-	{ month: "Apr", users: 1100 },
-	{ month: "May", users: 1200 },
-	{ month: "Jun", users: 1300 },
-	{ month: "Jul", users: 1400 },
-];
-
-// Dummy app revenue trend data
-const revenueData = [
-	{ month: "Jan", revenue: 5000 },
-	{ month: "Feb", revenue: 7000 },
-	{ month: "Mar", revenue: 6500 },
-	{ month: "Apr", revenue: 8000 },
-	{ month: "May", revenue: 9000 },
-	{ month: "Jun", revenue: 12000 },
-	{ month: "Jul", revenue: 15000 },
-];
+import { revenueData, salesData, userGrowthData } from "@/lib/data";
 
 const Dashboard = () => {
 	return (
