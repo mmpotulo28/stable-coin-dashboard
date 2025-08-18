@@ -42,54 +42,38 @@ const Dashboard = () => {
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-				<Card className="h-[400px]">
-					<CardHeader className="flex items-center gap-2">
-						<Icon icon="lucide:bar-chart-3" className="text-xl text-primary" />
-						<span className="font-semibold">Sales Overview</span>
-					</CardHeader>
-					<CardBody>
-						<DashboardChart
-							data={salesData}
-							xAxisKey="month"
-							chartKey="sales"
-							color="#006FEE"
-							height={300}
-						/>
-					</CardBody>
-				</Card>
-				<Card className="h-[400px]">
-					<CardHeader className="flex items-center gap-2">
-						<Icon icon="lucide:activity" className="text-xl text-primary" />
-						<span className="font-semibold">User Growth</span>
-					</CardHeader>
-					<CardBody>
-						<DashboardChart
-							data={userGrowthData}
-							xAxisKey="month"
-							chartKey="users"
-							color="#22C55E"
-							height={300}
-						/>
-					</CardBody>
-				</Card>
+				<DashboardChart
+					title="Sales Overview"
+					icon="lucide:bar-chart-3"
+					data={salesData}
+					xAxisKey="month"
+					chartKey="sales"
+					color="#006FEE"
+					height={300}
+				/>
+
+				<DashboardChart
+					title="User Growth"
+					icon="lucide:activity"
+					data={userGrowthData}
+					xAxisKey="month"
+					chartKey="users"
+					color="#22C55E"
+					height={300}
+				/>
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-				<Card className="h-[400px]">
-					<CardHeader className="flex items-center gap-2">
-						<Icon icon="lucide:trending-up" className="text-xl text-primary" />
-						<span className="font-semibold">App Revenue Trend</span>
-					</CardHeader>
-					<CardBody>
-						<DashboardChart
-							data={revenueData}
-							xAxisKey="month"
-							chartKey="revenue"
-							color="#F59E42"
-							height={300}
-						/>
-					</CardBody>
-				</Card>
+				<DashboardChart
+					title="App Revenue Trend"
+					icon="lucide:trending-up"
+					data={revenueData}
+					xAxisKey="month"
+					chartKey="revenue"
+					color="#F59E42"
+					height={300}
+				/>
+
 				<Card className="h-[400px]">
 					<CardHeader className="flex items-center gap-2">
 						<Icon icon="lucide:pie-chart" className="text-xl text-primary" />
