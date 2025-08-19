@@ -64,7 +64,7 @@ export default function LandingPage() {
 	const router = useRouter();
 
 	return (
-		<div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0f2027] via-[#2c5364] to-[#232526]">
+		<div className="min-h-screen flex flex-col bg-background">
 			{/* Header component */}
 			<LandingHeader />
 
@@ -138,7 +138,7 @@ export default function LandingPage() {
 					{features.map((f) => (
 						<Card
 							key={f.title}
-							className="shadow-xl border border-default-200 bg-background backdrop-blur-xl rounded-2xl hover:scale-105 transition-transform duration-200">
+							className="shadow-xl border border-default-200 bg-default-50 backdrop-blur-xl rounded-2xl hover:scale-105 transition-transform duration-200">
 							<CardHeader className="flex items-center gap-3">
 								<Icon
 									icon={f.icon}
@@ -170,7 +170,7 @@ export default function LandingPage() {
 					forOrganizations
 					appearance={{
 						variables: {
-							colorBackground: "hsl(var(--heroui-background) / 1)",
+							colorBackground: "hsl(var(--heroui-default-50) / 1)",
 							colorText: "hsl(var(--heroui-foreground) / 1)",
 							colorBorder: "hsl(var(--heroui-default-500) / 1)",
 							colorPrimary: "hsl(var(--heroui-primary) / 1)",
@@ -180,11 +180,11 @@ export default function LandingPage() {
 							colorTextSecondary: "hsl(var(--heroui-secondary) / 1)",
 							colorNeutral: "hsl(var(--heroui-text) / 1)",
 							colorForeground: "hsl(var(--heroui-text) / 1)",
-							colorInput: "hsl(var(--heroui-background) / 1)",
+							colorInput: "hsl(var(--heroui-default-50) / 1)",
 							colorInputForeground: "hsl(var(--heroui-text) / 1)",
 							colorMutedForeground: "hsl(var(--heroui-muted) / 1)",
-							colorModalBackdrop: "hsl(var(--heroui-background) / 1)",
-							colorMuted: "hsl(var(--heroui-background) / 1)",
+							colorModalBackdrop: "hsl(var(--heroui-default-50) / 1)",
+							colorMuted: "hsl(var(--heroui-default-50) / 1)",
 						},
 					}}
 				/>

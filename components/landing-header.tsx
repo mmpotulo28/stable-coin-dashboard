@@ -3,12 +3,13 @@ import { Button, Link, Avatar } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import { ThemeSwitch } from "./theme-switcher";
 
 export function LandingHeader() {
 	const router = useRouter();
 
 	return (
-		<header className="w-full px-8 py-6 flex items-center justify-between bg-white/10 backdrop-blur-xl shadow-lg  z-30">
+		<header className="w-full px-8 py-6 flex items-center justify-between bg-default-50 backdrop-blur-xl shadow-lg  z-30">
 			<Link href="/" className="flex items-center gap-3">
 				<Icon icon="lucide:rocket" className="text-4xl text-primary animate-spin-slow " />
 				<span className="font-extrabold text-3xl tracking-tight text-primary ">
@@ -16,6 +17,7 @@ export function LandingHeader() {
 				</span>
 			</Link>
 			<div className="flex gap-4 items-center">
+				<ThemeSwitch />
 				<SignedIn>
 					<Button
 						color="primary"

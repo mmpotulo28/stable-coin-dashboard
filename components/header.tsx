@@ -39,7 +39,21 @@ export function Header() {
 					<Icon icon="lucide:bell" className="text-xl" />
 				</Button>
 				<SignedIn>
-					<UserButton />
+					<UserButton
+						showName
+						fallback={
+							<Avatar
+								isBordered
+								as="button"
+								src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+								className="transition-transform"
+							/>
+						}
+						customMenuItems={[
+							{ label: "Profile", href: "/profile" },
+							{ label: "Settings", href: "/settings" },
+						]}
+					/>
 				</SignedIn>
 				<SignedOut>
 					<SignInButton>
