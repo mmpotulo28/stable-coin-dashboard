@@ -7,11 +7,12 @@ import { CreateUserModal } from "@/components/users/create-user-modal";
 import axios from "axios";
 import { IUser } from "@/types/users";
 import { Icon } from "@iconify/react";
+import { useUser } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 const UsersPage = () => {
+	const { user } = useUser();
 	const [selectedTab, setSelectedTab] = useState<"all" | "single">("all");
 	const [searchId, setSearchId] = useState("");
 	const [searching, setSearching] = useState(false);
@@ -31,7 +32,7 @@ const UsersPage = () => {
 			const { data } = await axios.get<{ user: IUser }>(
 				`${API_BASE}/users/${searchId.trim()}`,
 				{
-					headers: { Authorization: API_TOKEN },
+					headers: { Authorization: `${user?.unsafeMetadata.apiToken}` || "" },
 				},
 			);
 

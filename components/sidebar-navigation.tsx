@@ -3,7 +3,7 @@ import React from "react";
 import { Link, Button, User, Chip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useSideBar } from "@/context/SideBarProvider";
-import { useUser, SignedIn, OrganizationSwitcher } from "@clerk/nextjs";
+import { SignedIn, OrganizationSwitcher } from "@clerk/nextjs";
 
 const navigationItems = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/dashboard" },
@@ -13,13 +13,13 @@ const navigationItems = [
 	{ name: "Transactions", icon: "lucide:repeat", href: "/dashboard/transactions" },
 	{ name: "API Tokens", icon: "lucide:key", href: "/dashboard/api-tokens" },
 	{ name: "Charges", icon: "lucide:link", href: "/dashboard/charges", pro: true },
-	{ name: "Blocks", icon: "lucide:boxes", href: "/dashboard/blocks" },
+	{ name: "Coupons", icon: "lucide:ticket", href: "/dashboard/coupons" },
+	{ name: "Bank Accounts", icon: "lucide:briefcase", href: "/dashboard/bank-accounts" },
 	{ name: "Settings", icon: "lucide:settings", href: "/dashboard/settings" },
 ];
 
 export function SidebarNavigation() {
 	const { isSidebarOpen, toggleSidebar } = useSideBar();
-	const { user } = useUser();
 
 	return (
 		<aside
@@ -81,7 +81,7 @@ export function SidebarNavigation() {
 			{/* Footer */}
 			<div className="mt-auto px-4 py-4 border-t border-default-200 flex flex-col items-center gap-2">
 				<SignedIn>
-					<OrganizationSwitcher />
+					<OrganizationSwitcher hidePersonal />
 				</SignedIn>
 			</div>
 		</aside>
