@@ -123,3 +123,22 @@ export interface ICouponResponse {
 	message?: string;
 	coupon?: ICoupon;
 }
+
+export interface IStaffMember {
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	email: string;
+}
+
+export interface IStaffAssignRequest {
+	input: string;
+}
+
+export interface IStaffAssignResponse {
+	success: boolean;
+}
+
+export interface IStaffRemoveResponse {
+	success: boolean;
+}

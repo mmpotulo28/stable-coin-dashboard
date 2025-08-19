@@ -5,10 +5,22 @@ import { Icon } from "@iconify/react";
 import { useSideBar } from "@/context/SideBarProvider";
 import { SignedIn, OrganizationSwitcher } from "@clerk/nextjs";
 
-const navigationItems = [
+interface INavigationItem {
+	name: string;
+	icon: string;
+	href: string;
+	pro?: boolean;
+}
+
+const navigationItems: INavigationItem[] = [
 	{ name: "Dashboard", icon: "lucide:layout-dashboard", href: "/dashboard" },
 	{ name: "User Management", icon: "lucide:users", href: "/dashboard/users" },
-	{ name: "Business Management", icon: "lucide:briefcase", href: "/dashboard/business" },
+	{
+		name: "Business Management",
+		icon: "lucide:briefcase",
+		href: "/dashboard/business",
+	},
+	{ name: "Staff", icon: "lucide:users", href: "/dashboard/staff", pro: true },
 	{ name: "Make Transfer", icon: "lucide:banknote", href: "/dashboard/transfer", pro: true },
 	{ name: "Transactions", icon: "lucide:repeat", href: "/dashboard/transactions" },
 	{ name: "API Tokens", icon: "lucide:key", href: "/dashboard/api-tokens" },
@@ -54,7 +66,7 @@ export function SidebarNavigation() {
 					<Link
 						key={item.name}
 						href={item.href}
-						className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-150 hover:bg-primary/10 hover:text-primary ${
+						className={`group flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-colors duration-150 hover:bg-primary/10 hover:text-primary ${
 							isSidebarOpen ? "justify-start" : "justify-center"
 						} text-default-700 font-medium`}>
 						<Icon
@@ -62,18 +74,18 @@ export function SidebarNavigation() {
 							className="text-xl group-hover:text-primary transition-colors"
 						/>
 						{isSidebarOpen && (
-							<>
+							<div className="flex justify-between w-full">
 								<span className="text-nowrap">{item.name}</span>
 								{item.pro && (
 									<Chip
 										color="secondary"
 										variant="bordered"
 										size="sm"
-										className="ml-2 px-2 py-0 text-xs font-bold">
+										className="ml-2 px-2 py-0 text-xs font-bold scale-80">
 										PRO
 									</Chip>
 								)}
-							</>
+							</div>
 						)}
 					</Link>
 				))}
