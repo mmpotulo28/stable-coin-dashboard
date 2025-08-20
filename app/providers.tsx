@@ -56,7 +56,7 @@ if (typeof window !== "undefined") {
 					mask_input_options: {},
 					mask_text_selector: "*",
 					preload: false,
-					sampling_rate: 100,
+					sampling_rate: 10,
 				},
 			},
 			loader_config: {
