@@ -31,7 +31,7 @@ function OnboardingModal({ onComplete }: { onComplete: () => void }) {
 			}
 			await axios.post("/api/org-metadata", {
 				orgId: org?.id,
-				apiToken: `<Bearer ${apiToken}>`,
+				apiToken: `Bearer ${apiToken}`,
 				businessName: org?.name,
 				businessDesc,
 				onboarded: true,
