@@ -12,10 +12,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskTransactions } from "@/hooks/useLiskTransactions";
-import { UserBalancesCard } from "@/components/users/user-balances-card";
-import { UserTransactions } from "@/components/transactions/user-transactions";
 import { TokenBalances } from "../business/token-balances";
-import { useGlobalContext } from "@/context/GlobalProvider";
 import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 export function UserTransactionsTab() {
