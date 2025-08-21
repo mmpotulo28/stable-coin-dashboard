@@ -2,11 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { IApiToken, IApiTokenCreateResponse, IApiTokenRevokeResponse } from "@/types/users";
 import { useOrganization } from "@clerk/nextjs";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskApiTokens() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [tokens, setTokens] = useState<IApiToken[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,13 @@ export function useLiskApiTokens() {
 	const fetchTokens = async () => {
 		setLoading(true);
 		setError(null);
+		const cacheKey = `api_tokens_${organization?.id}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setTokens(cached);
+			setLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<IApiToken[]>(`${API_BASE}/tokens`, {
 				headers: {
@@ -32,6 +41,7 @@ export function useLiskApiTokens() {
 				},
 			});
 			setTokens(data);
+			setCache(cacheKey, data);
 		} catch (err: any) {
 			setError("Failed to fetch tokens.");
 		} finally {

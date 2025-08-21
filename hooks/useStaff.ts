@@ -2,11 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
 import { IStaffMember, IStaffAssignResponse, IStaffRemoveResponse } from "@/types/users";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useStaff() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [staff, setStaff] = useState<IStaffMember[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -15,6 +17,13 @@ export function useStaff() {
 	const fetchStaff = async (merchantId: string) => {
 		setLoading(true);
 		setError(null);
+		const cacheKey = `staff_${merchantId}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setStaff(cached);
+			setLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<IStaffMember[]>(
 				`${API_BASE}/staff/${encodeURIComponent(merchantId)}`,
@@ -25,6 +34,7 @@ export function useStaff() {
 				},
 			);
 			setStaff(data);
+			setCache(cacheKey, data);
 		} catch (err: any) {
 			setError(`Failed to fetch staff (${err.message || "Unknown error"}).`);
 		} finally {

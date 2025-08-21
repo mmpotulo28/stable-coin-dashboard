@@ -1,30 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { IUserTokenBalance } from "@/types/users";
 import { useOrganization } from "@clerk/nextjs";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
-function setCache(key: string, value: any) {
-	Cookies.set(key, JSON.stringify({ value, ts: Date.now() }), { expires: 1 / 1440 }); // 1 min
-}
-
-function getCache(key: string) {
-	const raw = Cookies.get(key);
-	if (!raw) return null;
-	try {
-		const { value, ts } = JSON.parse(raw);
-		if (Date.now() - ts < 60000) return value; // valid for 1 min
-	} catch {
-		return null;
-	}
-	return null;
-}
-
 export function useLiskBusiness() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [float, setFloat] = useState<IUserTokenBalance[]>([]);
 	const [loadingFloat, setLoadingFloat] = useState(false);
 	const [floatError, setFloatError] = useState<string | null>(null);

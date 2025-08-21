@@ -1,10 +1,10 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { IUser } from "@/types/users";
 import { useOrganization } from "@clerk/nextjs";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { useCache } from "./useCache";
 
 // Use environment variables
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
@@ -18,6 +18,7 @@ interface useLiskUsersType {
 
 export const useLiskUsers = (): useLiskUsersType => {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [users, setUsers] = useState<IUser[]>([]);
 	const [loadingUsers, setLoadingUsers] = useState(false);
 	const [errorUsers, setErrorUsers] = useState<string | null>(null);
@@ -54,18 +55,3 @@ export const useLiskUsers = (): useLiskUsersType => {
 		fetchUsers,
 	};
 };
-
-function setCache(key: string, value: any) {
-	Cookies.set(key, JSON.stringify({ value, ts: Date.now() }), { expires: 1 / 1440 });
-}
-function getCache(key: string) {
-	const raw = Cookies.get(key);
-	if (!raw) return null;
-	try {
-		const { value, ts } = JSON.parse(raw);
-		if (Date.now() - ts < 60000) return value;
-	} catch {
-		return null;
-	}
-	return null;
-}

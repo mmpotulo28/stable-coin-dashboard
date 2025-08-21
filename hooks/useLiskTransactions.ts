@@ -2,11 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { IUserTokenBalance, IUserTransaction } from "@/types/users";
 import { useOrganization } from "@clerk/nextjs";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskTransactions() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [balances, setBalances] = useState<IUserTokenBalance[]>([]);
 	const [balancesLoading, setBalancesLoading] = useState(false);
 	const [balancesError, setBalancesError] = useState<string | null>(null);
@@ -22,6 +24,13 @@ export function useLiskTransactions() {
 	const fetchUserBalances = async (userId: string) => {
 		setBalancesLoading(true);
 		setBalancesError(null);
+		const cacheKey = `balances_${userId}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setBalances(cached);
+			setBalancesLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<{ tokens: IUserTokenBalance[] }>(
 				`${API_BASE}/${userId}/balance`,
@@ -32,6 +41,7 @@ export function useLiskTransactions() {
 				},
 			);
 			setBalances(data.tokens || []);
+			setCache(cacheKey, data.tokens || []);
 		} catch (err: any) {
 			if (err?.response?.status === 400) setBalancesError("Invalid user ID.");
 			else if (err?.response?.status === 401) setBalancesError("Unauthorized.");
@@ -45,6 +55,13 @@ export function useLiskTransactions() {
 	const fetchUserTransactions = async (userId: string) => {
 		setTransactionsLoading(true);
 		setTransactionsError(null);
+		const cacheKey = `transactions_${userId}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setTransactions(cached);
+			setTransactionsLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<{ transactions: IUserTransaction[] }>(
 				`${API_BASE}/${userId}/transactions`,
@@ -55,6 +72,7 @@ export function useLiskTransactions() {
 				},
 			);
 			setTransactions(data.transactions || []);
+			setCache(cacheKey, data.transactions || []);
 		} catch (err: any) {
 			if (err?.response?.status === 400) setTransactionsError("Invalid user ID.");
 			else if (err?.response?.status === 401) setTransactionsError("Unauthorized.");

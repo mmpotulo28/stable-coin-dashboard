@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
@@ -17,6 +18,7 @@ export interface ICharge {
 
 export function useLiskCharges() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [charges, setCharges] = useState<ICharge[]>([]);
 	const [chargesLoading, setChargesLoading] = useState(false);
 	const [chargesError, setChargesError] = useState<string | null>(null);
@@ -77,6 +79,13 @@ export function useLiskCharges() {
 	const fetchCharges = async (userId: string) => {
 		setChargesLoading(true);
 		setChargesError(null);
+		const cacheKey = `charges_${userId}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setCharges(cached);
+			setChargesLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get<{ charges: ICharge[] }>(
 				`${API_BASE}/charge/${userId}`,
@@ -87,6 +96,7 @@ export function useLiskCharges() {
 				},
 			);
 			setCharges(data.charges || []);
+			setCache(cacheKey, data.charges || []);
 		} catch (err: any) {
 			if (err?.response?.status === 400) setChargesError("Invalid parameter.");
 			else if (err?.response?.status === 401) setChargesError("Unauthorized.");

@@ -2,11 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
 import { iBankAccount, iBankAccountResponse } from "@/types/users";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useBank() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [bankAccount, setBankAccount] = useState<iBankAccount | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -49,6 +51,13 @@ export function useBank() {
 	const getBankAccount = async (userId: string) => {
 		setLoading(true);
 		setError(null);
+		const cacheKey = `bank_${userId}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setBankAccount(cached);
+			setLoading(false);
+			return cached;
+		}
 		try {
 			const { data } = await axios.get<iBankAccount>(
 				`${API_BASE}/bank/${encodeURIComponent(userId)}`,
@@ -59,6 +68,7 @@ export function useBank() {
 				},
 			);
 			setBankAccount(data);
+			setCache(cacheKey, data);
 			return data;
 		} catch (err: any) {
 			setError(

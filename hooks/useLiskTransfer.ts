@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
+import { useCache } from "./useCache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskTransfer() {
 	const { organization } = useOrganization();
+	const { setCache, getCache } = useCache();
 	const [recipient, setRecipient] = useState<any>(null);
 	const [recipientLoading, setRecipientLoading] = useState(false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -23,6 +25,13 @@ export function useLiskTransfer() {
 		setRecipientLoading(true);
 		setRecipientError(null);
 		setRecipient(null);
+		const cacheKey = `recipient_${id}`;
+		const cached = getCache(cacheKey);
+		if (cached) {
+			setRecipient(cached);
+			setRecipientLoading(false);
+			return;
+		}
 		try {
 			const { data } = await axios.get(`${API_BASE}/recipient/${id}`, {
 				headers: {
@@ -30,6 +39,7 @@ export function useLiskTransfer() {
 				},
 			});
 			setRecipient(data);
+			setCache(cacheKey, data);
 		} catch (err: any) {
 			if (err?.response?.status === 404) {
 				setRecipientError("Recipient not found.");
