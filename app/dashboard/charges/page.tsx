@@ -1,11 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input, Card, Image, Chip, Spinner } from "@heroui/react";
+import {
+	Button,
+	Input,
+	Card,
+	Image,
+	Chip,
+	Spinner,
+	Autocomplete,
+	AutocompleteItem,
+	Divider,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { ChargeList } from "@/components/charges/ChargeList";
 import { CreateChargeModal } from "@/components/charges/CreateChargeModal";
 import axios from "axios";
 import OrgProPlanProvider from "@/context/OrgRequiredProvider";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
@@ -15,13 +26,17 @@ export default function ChargesPage() {
 	const [confirmedUserId, setConfirmedUserId] = useState<string | null>(null);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const [checkingUser, setCheckingUser] = useState(false);
-	const [userError, setUserError] = useState<string | null>(null);
+	const [userError, setUserError] = useState<string | null>();
 	const [userInfo, setUserInfo] = useState<any>(null);
 	const [showCheckingMsg, setShowCheckingMsg] = useState(false);
+	const { globalUsers } = useGlobalContext();
 
 	const handleConfirm = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!userId.trim()) return;
+		if (!userId.trim()) {
+			setUserError("User ID is required.");
+			return;
+		}
 		setCheckingUser(true);
 		setShowCheckingMsg(true);
 		setUserError(null);
@@ -51,6 +66,8 @@ export default function ChargesPage() {
 		setShowCheckingMsg(false);
 	};
 
+	console.log("global users", globalUsers);
+
 	return (
 		<OrgProPlanProvider>
 			<div className="flex-1 overflow-auto p-6 space-y-8">
@@ -67,25 +84,47 @@ export default function ChargesPage() {
 							alt="Prompt illustration"
 							width={120}
 							height={120}
-							className="mb-4"
+							className="mb-4 mt-0 bg-white"
 						/>
 						<h2 className="text-lg font-semibold mb-2">Enter User ID</h2>
 						<p className="text-default-500 mb-6 text-center">
 							To manage charges, please enter the User ID below.
 						</p>
-						<form onSubmit={handleConfirm} className="w-full flex gap-2 items-center">
+						<form
+							onSubmit={handleConfirm}
+							className="w-full flex flex-col gap-2 items-start">
 							<Input
 								placeholder="User ID"
 								value={userId}
 								onChange={(e) => setUserId(e.target.value)}
-								className="max-w-xs"
-								size="sm"
+								size="md"
+								label="User ID (optional)"
 								autoFocus
 								isDisabled={checkingUser}
+								className="w-full"
 							/>
+
+							<span className="text-default-500 mx-auto">OR</span>
+
+							<Autocomplete
+								size="md"
+								className="w-full"
+								defaultItems={globalUsers}
+								label="Pick a User"
+								placeholder="Search a user"
+								onChange={(e) => setUserId(e.target.value)}>
+								{(user) => (
+									<AutocompleteItem key={user.id}>
+										{user.fullName}
+									</AutocompleteItem>
+								)}
+							</Autocomplete>
+
+							<Divider />
 							<Button
 								color="primary"
 								type="submit"
+								className="w-full"
 								isDisabled={!userId.trim() || checkingUser}
 								startContent={<Icon icon="lucide:search" />}>
 								{checkingUser ? <Spinner size="sm" /> : "Proceed"}

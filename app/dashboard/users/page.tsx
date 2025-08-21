@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Tabs, Tab, Input, Button, Spinner, Image, Card, Divider } from "@heroui/react";
+import { Tabs, Tab, Input, Button, Spinner, Image, Card, Divider, Alert } from "@heroui/react";
 import { UserList } from "@/components/users/user-list";
 import { UserDetailsCard } from "@/components/users/user-details-card";
 import { CreateUserModal } from "@/components/users/create-user-modal";
@@ -145,9 +145,8 @@ const UsersPage = () => {
 												width={80}
 												height={80}
 											/>
-											<div className="text-danger font-medium">
-												{searchError}
-											</div>
+
+											<Alert title="Error" description={searchError} />
 										</div>
 									)}
 								</form>

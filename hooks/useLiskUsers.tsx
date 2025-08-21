@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { IUser } from "@/types/users";
 import { useOrganization } from "@clerk/nextjs";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 // Use environment variables
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;

@@ -9,7 +9,7 @@ import { SideBarProvider } from "@/context/SideBarProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { AgentOptions } from "@newrelic/browser-agent/loaders/agent";
 import OnboardingCheck from "@/context/OnBoardingCheck";
-import OrgProPlanProvider from "@/context/OrgRequiredProvider";
+import GlobalProvider from "@/context/GlobalProvider";
 
 let BrowserAgent: typeof import("@newrelic/browser-agent/loaders/browser-agent").BrowserAgent;
 
@@ -116,9 +116,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 			<HeroUIProvider navigate={router.push}>
 				<NextThemesProvider {...themeProps}>
 					<ToastProvider />
-					<SideBarProvider>
-						<OnboardingCheck>{children}</OnboardingCheck>
-					</SideBarProvider>
+					<GlobalProvider>
+						<SideBarProvider>
+							<OnboardingCheck>{children}</OnboardingCheck>
+						</SideBarProvider>
+					</GlobalProvider>
 				</NextThemesProvider>
 			</HeroUIProvider>
 		</ClerkProvider>

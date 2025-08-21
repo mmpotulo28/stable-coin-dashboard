@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Table,
 	TableHeader,
@@ -9,13 +9,8 @@ import {
 	TableCell,
 	User,
 	Chip,
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	Button,
 	Spinner,
+	Alert,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { IUser } from "@/types/users";
@@ -76,9 +71,7 @@ export function UserList({ limit = 10 }) {
 	}
 
 	if (errorUsers) {
-		return (
-			<div className="flex justify-center items-center py-8 text-danger">{errorUsers}</div>
-		);
+		return <Alert title="Error" description={errorUsers} variant="bordered" color="danger" />;
 	}
 
 	const displayUsers = users.slice(0, limit);

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardHeader, CardBody, Chip, Spinner, Image } from "@heroui/react";
+import { Card, CardHeader, CardBody, Chip, Spinner, Image, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskBusiness } from "@/hooks/useLiskBusiness";
 import { IUserTokenBalance } from "@/types/users";
@@ -25,7 +25,12 @@ export function TokenBalances({ float, loadingFloat, floatError }: TokenBalanceP
 						<Spinner label="Loading balances..." />
 					</div>
 				) : floatError ? (
-					<div className="text-danger text-center py-8">{floatError}</div>
+					<Alert
+						title="Error"
+						description={floatError}
+						variant="bordered"
+						color="danger"
+					/>
 				) : float.length === 0 ? (
 					<div className="flex flex-col items-center justify-center py-8">
 						<Image

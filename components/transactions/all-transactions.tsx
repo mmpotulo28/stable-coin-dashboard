@@ -1,14 +1,26 @@
 import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Input, Button, Spinner } from "@heroui/react";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Input,
+	Button,
+	Spinner,
+	Autocomplete,
+	AutocompleteItem,
+	Divider,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useLiskTransactions } from "@/hooks/useLiskTransactions";
 import { UserTransactions } from "@/components/transactions/user-transactions";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 export function AllTransactions() {
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
 	const { transactions, transactionsLoading, transactionsError, fetchUserTransactions } =
 		useLiskTransactions();
+	const { globalUsers } = useGlobalContext();
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -26,19 +38,41 @@ export function AllTransactions() {
 				</div>
 			</CardHeader>
 			<CardBody>
-				<form onSubmit={handleSearch} className="flex gap-2 mb-4">
-					<Input
-						placeholder="Enter User ID"
-						value={userId}
-						onChange={(e) => setUserId(e.target.value)}
-						className="max-w-xs"
-					/>
+				<form onSubmit={handleSearch} className="w-full flex flex-col gap-2 items-start">
+					<div className="w-full flex gap-3 items-center">
+						<Input
+							placeholder="User ID"
+							value={userId}
+							onChange={(e) => setUserId(e.target.value)}
+							size="sm"
+							label="User ID (optional)"
+							autoFocus
+							isDisabled={transactionsLoading}
+							className="w-full"
+						/>
+
+						<span className="text-default-500 mx-auto">OR</span>
+
+						<Autocomplete
+							size="sm"
+							className="w-full"
+							defaultItems={globalUsers}
+							label="Pick a User"
+							placeholder="Search a user"
+							onChange={(e) => setUserId(e.target.value)}>
+							{(user) => (
+								<AutocompleteItem key={user.id}>{user.fullName}</AutocompleteItem>
+							)}
+						</Autocomplete>
+					</div>
+					<Divider />
 					<Button
 						color="primary"
 						type="submit"
+						className="w-full"
 						isDisabled={!userId.trim() || transactionsLoading}
 						startContent={<Icon icon="lucide:search" />}>
-						{transactionsLoading ? <Spinner size="sm" /> : "Search"}
+						{transactionsLoading ? <Spinner size="sm" /> : "Proceed"}
 					</Button>
 				</form>
 				{searched && (

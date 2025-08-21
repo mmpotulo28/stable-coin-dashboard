@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardHeader, CardBody, Chip, Spinner } from "@heroui/react";
+import { Card, CardHeader, CardBody, Chip, Spinner, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { IUserTokenBalance } from "@/types/users";
 
@@ -24,7 +24,7 @@ export function UserBalancesCard({
 				{loading ? (
 					<Spinner label="Loading balances..." />
 				) : error ? (
-					<div className="text-danger">{error}</div>
+					<Alert title="Error" description={error} variant="bordered" color="danger" />
 				) : balances.length === 0 ? (
 					<div className="text-default-500">No tokens found.</div>
 				) : (
