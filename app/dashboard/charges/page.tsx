@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Button,
 	Input,
@@ -17,6 +17,7 @@ import { CreateChargeModal } from "@/components/charges/CreateChargeModal";
 import axios from "axios";
 import OrgProPlanProvider from "@/context/OrgRequiredProvider";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
@@ -30,6 +31,11 @@ export default function ChargesPage() {
 	const [userInfo, setUserInfo] = useState<any>(null);
 	const [showCheckingMsg, setShowCheckingMsg] = useState(false);
 	const { globalUsers } = useGlobalContext();
+	const { users, fetchUsers } = useLiskUsers();
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const handleConfirm = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -109,14 +115,17 @@ export default function ChargesPage() {
 							<Autocomplete
 								size="md"
 								className="w-full"
-								defaultItems={globalUsers}
+								defaultItems={users}
 								label="Pick a User"
+								value={userId}
 								placeholder="Search a user"
-								onChange={(e) => setUserId(e.target.value)}>
+								onSelectionChange={(key) => key && setUserId(key.toString())}>
 								{(user) => (
-									<AutocompleteItem key={user.id}>
-										{user.fullName}
-									</AutocompleteItem>
+									<AutocompleteItem
+										key={user.id}
+										title={`${user.firstName} ${user.lastName}`}
+										description={user.email}
+									/>
 								)}
 							</Autocomplete>
 

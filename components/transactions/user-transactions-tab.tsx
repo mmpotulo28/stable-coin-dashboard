@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Card,
 	CardHeader,
@@ -16,9 +16,9 @@ import { UserBalancesCard } from "@/components/users/user-balances-card";
 import { UserTransactions } from "@/components/transactions/user-transactions";
 import { TokenBalances } from "../business/token-balances";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 export function UserTransactionsTab() {
-	const { globalUsers } = useGlobalContext();
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
 	const {
@@ -29,6 +29,11 @@ export function UserTransactionsTab() {
 
 		fetchUserTransactions,
 	} = useLiskTransactions();
+	const { users, fetchUsers } = useLiskUsers();
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -65,12 +70,17 @@ export function UserTransactionsTab() {
 						<Autocomplete
 							size="sm"
 							className="w-full"
-							defaultItems={globalUsers}
+							defaultItems={users}
 							label="Pick a User"
+							value={userId}
 							placeholder="Search a user"
-							onChange={(e) => setUserId(e.target.value)}>
+							onSelectionChange={(key) => key && setUserId(key.toString())}>
 							{(user) => (
-								<AutocompleteItem key={user.id}>{user.fullName}</AutocompleteItem>
+								<AutocompleteItem
+									key={user.id}
+									title={`${user.firstName} ${user.lastName}`}
+									description={user.email}
+								/>
 							)}
 						</Autocomplete>
 					</div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Card,
 	CardHeader,
@@ -15,12 +15,17 @@ import { Icon } from "@iconify/react";
 import { useLiskTransactions } from "@/hooks/useLiskTransactions";
 import { TransactionDetailsModal } from "@/components/transactions/transaction-details-modal";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 export function TransactionSearch() {
 	const [userId, setUserId] = useState("");
 	const [transactionId, setTransactionId] = useState("");
 	const [searched, setSearched] = useState(false);
-	const { globalUsers } = useGlobalContext();
+	const { users, fetchUsers } = useLiskUsers();
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const { transaction, transactionLoading, transactionError, fetchSingleTransaction } =
 		useLiskTransactions();
@@ -55,16 +60,20 @@ export function TransactionSearch() {
 						/>
 
 						<span className="text-default-500 mx-auto">OR</span>
-
 						<Autocomplete
 							size="sm"
 							className="w-full"
-							defaultItems={globalUsers}
+							defaultItems={users}
 							label="Pick a User"
+							value={userId}
 							placeholder="Search a user"
-							onChange={(e) => setUserId(e.target.value)}>
+							onSelectionChange={(key) => key && setUserId(key.toString())}>
 							{(user) => (
-								<AutocompleteItem key={user.id}>{user.fullName}</AutocompleteItem>
+								<AutocompleteItem
+									key={user.id}
+									title={`${user.firstName} ${user.lastName}`}
+									description={user.email}
+								/>
 							)}
 						</Autocomplete>
 					</div>
