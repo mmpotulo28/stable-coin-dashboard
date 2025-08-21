@@ -17,12 +17,14 @@ import {
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { PricingTable, useUser } from "@clerk/nextjs";
+import { PricingTable, useUser, useOrganization } from "@clerk/nextjs";
 import jsonPackage from "@/package.json";
+import axios from "axios";
 
 export default function SettingsPage() {
 	const { theme, setTheme } = useTheme();
 	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [apiBase, setApiBase] = useState(process.env.NEXT_PUBLIC_API_BASE || "");
 	const [businessName, setBusinessName] = useState<string>("");
 	const [businessDesc, setBusinessDesc] = useState<string>("");
@@ -34,12 +36,13 @@ export default function SettingsPage() {
 	const router = useRouter();
 
 	useEffect(() => {
-		if (user) {
-			setApiToken((user.unsafeMetadata.apiToken as string) || "");
-			setBusinessName((user.unsafeMetadata.businessName as string) || "");
-			setBusinessDesc((user.unsafeMetadata.businessDesc as string) || "");
+		if (organization) {
+			const meta = organization.publicMetadata || {};
+			setApiToken((meta.apiToken as string) || "");
+			setBusinessName((meta.businessName as string) || "");
+			setBusinessDesc((meta.businessDesc as string) || "");
 		}
-	}, [user]);
+	}, [organization]);
 
 	const handleThemeChange = (val: string) => setTheme(val);
 
@@ -48,15 +51,13 @@ export default function SettingsPage() {
 		setSaveMsg(null);
 
 		try {
-			await user?.update({
-				unsafeMetadata: {
-					apiToken,
-					businessName,
-					businessDesc,
-					onboarded: true,
-				},
+			await axios.post("/api/org-metadata", {
+				orgId: organization?.id,
+				apiToken,
+				businessName,
+				businessDesc,
+				onboarded: true,
 			});
-
 			setSaveMsg("Settings saved! (Note: Environment changes require a restart)");
 		} catch (error) {
 			setSaveMsg("Failed to save onboarding info.");

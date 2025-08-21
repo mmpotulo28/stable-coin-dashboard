@@ -5,11 +5,11 @@ import { Icon } from "@iconify/react";
 import { FindRecipient } from "@/components/transfer/find-recipient";
 import { SingleTransfer } from "@/components/transfer/single-transfer";
 import { BatchTransfer } from "@/components/transfer/batch-transfer";
-import { OrgProRequired } from "@/app/providers";
+import OrgProPlanProvider from "@/context/OrgRequiredProvider";
 
 export default function TransferPage() {
 	return (
-		<OrgProRequired>
+		<OrgProPlanProvider>
 			<div className="flex-1 overflow-auto p-6 space-y-8">
 				<h1 className="text-2xl font-semibold mb-6 flex items-center gap-2">
 					<Icon icon="lucide:arrow-right-left" />
@@ -48,6 +48,6 @@ export default function TransferPage() {
 					</Tab>
 				</Tabs>
 			</div>
-		</OrgProRequired>
+		</OrgProPlanProvider>
 	);
 }

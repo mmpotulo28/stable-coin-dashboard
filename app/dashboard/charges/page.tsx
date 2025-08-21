@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input, Card, CardBody, CardHeader, Image, Chip, Spinner } from "@heroui/react";
+import { Button, Input, Card, Image, Chip, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { ChargeList } from "@/components/charges/ChargeList";
 import { CreateChargeModal } from "@/components/charges/CreateChargeModal";
 import axios from "axios";
-import { OrgProRequired } from "@/app/providers";
+import OrgProPlanProvider from "@/context/OrgRequiredProvider";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
@@ -52,7 +52,7 @@ export default function ChargesPage() {
 	};
 
 	return (
-		<OrgProRequired>
+		<OrgProPlanProvider>
 			<div className="flex-1 overflow-auto p-6 space-y-8">
 				<div className="flex items-center justify-between mb-6">
 					<h1 className="text-2xl font-semibold flex items-center gap-2">
@@ -143,6 +143,6 @@ export default function ChargesPage() {
 					</>
 				)}
 			</div>
-		</OrgProRequired>
+		</OrgProPlanProvider>
 	);
 }
