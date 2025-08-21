@@ -1,22 +1,13 @@
 "use client";
-import {
-	Avatar,
-	Button,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-	Link,
-} from "@heroui/react";
+import { Avatar, Button, Link } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import React from "react";
 import { ThemeSwitch } from "./theme-switcher";
 import { useSideBar } from "@/context/SideBarProvider";
-import { UserButton, useUser, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 export function Header() {
 	const { toggleSidebar } = useSideBar();
-	const { user } = useUser();
 
 	return (
 		<header className="border-default-200 flex items-center justify-between border-b px-4 py-3">
@@ -38,33 +29,24 @@ export function Header() {
 				<Button isIconOnly variant="light">
 					<Icon icon="lucide:bell" className="text-xl" />
 				</Button>
-				<SignedIn>
-					<UserButton
-						showName
-						fallback={
-							<Avatar
-								isBordered
-								as="button"
-								src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-								className="transition-transform"
-							/>
-						}
-						customMenuItems={[
-							{ label: "Profile", href: "/profile" },
-							{ label: "Settings", href: "/settings" },
-						]}
-					/>
-				</SignedIn>
-				<SignedOut>
-					<SignInButton>
+				<UserButton
+					showName
+					fallback={
 						<Avatar
 							isBordered
 							as="button"
 							src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
 							className="transition-transform"
 						/>
-					</SignInButton>
-				</SignedOut>
+					}>
+					<UserButton.MenuItems>
+						<UserButton.Link
+							label="Settings"
+							labelIcon={<Icon icon="lucide:settings" />}
+							href="/dashboard/settings"
+						/>
+					</UserButton.MenuItems>
+				</UserButton>
 			</div>
 		</header>
 	);

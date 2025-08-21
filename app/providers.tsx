@@ -85,7 +85,6 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
 	return (
 		<ClerkProvider
-			dynamic
 			appearance={{
 				variables: {
 					colorBackground: "hsl(var(--heroui-background) / 1)",
@@ -103,6 +102,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 					colorMutedForeground: "hsl(var(--heroui-muted) / 1)",
 					colorModalBackdrop: "hsl(var(--heroui-background) / 1)",
 					colorMuted: "hsl(var(--heroui-default) / 1)",
+				},
+				layout: {
+					unsafe_disableDevelopmentModeWarnings: true,
 				},
 			}}
 			signInUrl="/auth/sign-in"

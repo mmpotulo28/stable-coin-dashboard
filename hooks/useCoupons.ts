@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 import {
 	ICoupon,
 	ICouponCreateRequest,
@@ -12,7 +12,7 @@ import {
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useCoupons() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [coupons, setCoupons] = useState<ICoupon[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,9 @@ export function useCoupons() {
 		setError(null);
 		try {
 			const { data } = await axios.get<ICoupon[]>(`${API_BASE}/coupons`, {
-				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
+				headers: {
+					Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+				},
 			});
 			setCoupons(data);
 		} catch (err: any) {
@@ -44,7 +46,7 @@ export function useCoupons() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -68,7 +70,7 @@ export function useCoupons() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -92,7 +94,7 @@ export function useCoupons() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -114,7 +116,7 @@ export function useCoupons() {
 				`${API_BASE}/coupons/${encodeURIComponent(userId)}/${encodeURIComponent(couponId)}`,
 				{
 					headers: {
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);

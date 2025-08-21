@@ -1,11 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskTransfer() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [recipient, setRecipient] = useState<any>(null);
 	const [recipientLoading, setRecipientLoading] = useState(false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -25,7 +25,9 @@ export function useLiskTransfer() {
 		setRecipient(null);
 		try {
 			const { data } = await axios.get(`${API_BASE}/recipient/${id}`, {
-				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
+				headers: {
+					Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+				},
 			});
 			setRecipient(data);
 		} catch (err: any) {
@@ -69,7 +71,7 @@ export function useLiskTransfer() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -111,7 +113,7 @@ export function useLiskTransfer() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);

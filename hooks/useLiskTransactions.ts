@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { IUserTokenBalance, IUserTransaction } from "@/types/users";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskTransactions() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [balances, setBalances] = useState<IUserTokenBalance[]>([]);
 	const [balancesLoading, setBalancesLoading] = useState(false);
 	const [balancesError, setBalancesError] = useState<string | null>(null);
@@ -25,7 +25,11 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<{ tokens: IUserTokenBalance[] }>(
 				`${API_BASE}/${userId}/balance`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setBalances(data.tokens || []);
 		} catch (err: any) {
@@ -44,7 +48,11 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<{ transactions: IUserTransaction[] }>(
 				`${API_BASE}/${userId}/transactions`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setTransactions(data.transactions || []);
 		} catch (err: any) {
@@ -62,7 +70,11 @@ export function useLiskTransactions() {
 		try {
 			const { data } = await axios.get<IUserTransaction>(
 				`${API_BASE}/${userId}/transactions/${transactionId}`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setTransaction(data);
 		} catch (err: any) {

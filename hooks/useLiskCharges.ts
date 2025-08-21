@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
@@ -16,7 +16,7 @@ export interface ICharge {
 }
 
 export function useLiskCharges() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [charges, setCharges] = useState<ICharge[]>([]);
 	const [chargesLoading, setChargesLoading] = useState(false);
 	const [chargesError, setChargesError] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export function useLiskCharges() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -80,7 +80,11 @@ export function useLiskCharges() {
 		try {
 			const { data } = await axios.get<{ charges: ICharge[] }>(
 				`${API_BASE}/charge/${userId}`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setCharges(data.charges || []);
 		} catch (err: any) {
@@ -99,7 +103,9 @@ export function useLiskCharges() {
 		setCharge(null);
 		try {
 			const { data } = await axios.get<ICharge>(`${API_BASE}/retrieve-charge/${chargeId}`, {
-				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
+				headers: {
+					Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+				},
 			});
 			setCharge(data);
 		} catch (err: any) {
@@ -133,7 +139,7 @@ export function useLiskCharges() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -157,7 +163,11 @@ export function useLiskCharges() {
 		try {
 			const { data } = await axios.delete<{ message: string }>(
 				`${API_BASE}/charge/${userId}/${chargeId}/delete`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setDeleteSuccess(data.message || "Charge deleted");
 			return data;

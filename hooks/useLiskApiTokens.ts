@@ -1,12 +1,12 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { IApiToken, IApiTokenCreateResponse, IApiTokenRevokeResponse } from "@/types/users";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useLiskApiTokens() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [tokens, setTokens] = useState<IApiToken[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,9 @@ export function useLiskApiTokens() {
 		setError(null);
 		try {
 			const { data } = await axios.get<IApiToken[]>(`${API_BASE}/tokens`, {
-				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
+				headers: {
+					Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+				},
 			});
 			setTokens(data);
 		} catch (err: any) {
@@ -48,7 +50,7 @@ export function useLiskApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -71,7 +73,7 @@ export function useLiskApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -94,7 +96,7 @@ export function useLiskApiTokens() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);

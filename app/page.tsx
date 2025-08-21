@@ -166,7 +166,6 @@ export default function LandingPage() {
 			{/* pricing table */}
 			<section className="max-w-7xl mx-auto py-16 px-6 w-full">
 				<PricingTable
-					collapseFeatures
 					forOrganizations
 					appearance={{
 						variables: {

@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import axios from "axios";
 import Cookies from "js-cookie";
 import { IUser } from "@/types/users";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 
 // Use environment variables
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
@@ -16,7 +16,7 @@ interface useLiskUsersType {
 }
 
 export const useLiskUsers = (): useLiskUsersType => {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [users, setUsers] = useState<IUser[]>([]);
 	const [loadingUsers, setLoadingUsers] = useState(false);
 	const [errorUsers, setErrorUsers] = useState<string | null>(null);
@@ -33,7 +33,9 @@ export const useLiskUsers = (): useLiskUsersType => {
 		}
 		try {
 			const { data } = await axios.get<{ users: IUser[] }>(`${API_BASE}/users`, {
-				headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" },
+				headers: {
+					Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+				},
 			});
 			setUsers(data.users || []);
 			setCache(cacheKey, data.users || []);

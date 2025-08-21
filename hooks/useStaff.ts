@@ -1,17 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/nextjs";
-import {
-	IStaffMember,
-	IStaffAssignRequest,
-	IStaffAssignResponse,
-	IStaffRemoveResponse,
-} from "@/types/users";
+import { useOrganization } from "@clerk/nextjs";
+import { IStaffMember, IStaffAssignResponse, IStaffRemoveResponse } from "@/types/users";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useStaff() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [staff, setStaff] = useState<IStaffMember[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -23,7 +18,11 @@ export function useStaff() {
 		try {
 			const { data } = await axios.get<IStaffMember[]>(
 				`${API_BASE}/staff/${encodeURIComponent(merchantId)}`,
-				{ headers: { Authorization: (user?.unsafeMetadata.apiToken as string) || "" } },
+				{
+					headers: {
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
+					},
+				},
 			);
 			setStaff(data);
 		} catch (err: any) {
@@ -44,7 +43,7 @@ export function useStaff() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -67,7 +66,7 @@ export function useStaff() {
 				`${API_BASE}/staff/${encodeURIComponent(merchantId)}/${encodeURIComponent(staffId)}`,
 				{
 					headers: {
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 import { iBankAccount, iBankAccountResponse } from "@/types/users";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
 export function useBank() {
-	const { user } = useUser();
+	const { organization } = useOrganization();
 	const [bankAccount, setBankAccount] = useState<iBankAccount | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,7 @@ export function useBank() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -54,7 +54,7 @@ export function useBank() {
 				`${API_BASE}/bank/${encodeURIComponent(userId)}`,
 				{
 					headers: {
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -80,7 +80,7 @@ export function useBank() {
 				`${API_BASE}/bank/${encodeURIComponent(userId)}`,
 				{
 					headers: {
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);
@@ -131,7 +131,7 @@ export function useBank() {
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: (user?.unsafeMetadata.apiToken as string) || "",
+						Authorization: `Bearer ${(organization?.publicMetadata.apiToken as string) || ""}`,
 					},
 				},
 			);

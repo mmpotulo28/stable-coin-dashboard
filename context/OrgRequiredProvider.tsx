@@ -18,7 +18,7 @@ function OrgProPlanProvider({ children }: { children: React.ReactNode }) {
 			const subscriptions = await organization?.getSubscriptions();
 			const IsPro =
 				subscriptions?.data.some(
-					(sub) => sub.status === "active" && sub.plan?.slug === "pro_plan2",
+					(sub) => sub.status === "active" && sub.plan?.slug === "pro_plan",
 				) || false;
 			setIsPro(IsPro);
 
