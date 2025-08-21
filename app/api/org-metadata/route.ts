@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
 	try {
 		console.log("Updating org metadata: for ", orgId);
-		const res = await clerkClient.organizations..updateOrganizationMetadata(orgId, {
+		const res = await clerkClient.organizations.updateOrganizationMetadata(orgId, {
 			publicMetadata: {
 				apiToken,
 				businessName,
