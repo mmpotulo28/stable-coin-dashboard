@@ -25,9 +25,17 @@ export function ApiTokenList() {
 		tokens,
 		apiTokenLoading,
 		apiTokenError,
+
 		updateToken,
 		updateTokenError,
 		updateTokenLoading,
+		updateTokenMessage,
+
+		createToken,
+		createTokenLoading,
+		createTokenMessage,
+		createTokenError,
+
 		revokeToken,
 		revokeTokenError,
 		revokeTokenLoading,
@@ -79,11 +87,11 @@ export function ApiTokenList() {
 				</div>
 			</CardHeader>
 			<CardBody>
-				{apiTokenLoading ? (
-					<Spinner label="Loading tokens..." />
-				) : apiTokenError ? (
-					<div className="text-danger">{apiTokenError}</div>
-				) : (
+				{apiTokenLoading && <Spinner label="Loading tokens..." />}
+
+				{apiTokenError && <div className="text-danger">{apiTokenError}</div>}
+
+				{tokens.length > 0 && (
 					<Table aria-label="API Tokens" removeWrapper>
 						<TableHeader>
 							<TableColumn>ID</TableColumn>

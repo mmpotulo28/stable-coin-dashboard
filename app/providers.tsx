@@ -91,7 +91,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 					colorText: "hsl(var(--heroui-foreground) / 1)",
 					colorBorder: "hsl(var(--heroui-default-500) / 1)",
 					colorPrimary: "hsl(var(--heroui-primary) / 1)",
-					colorMessage: "hsl(var(--heroui-success) / 1)",
+					colorSuccess: "hsl(var(--heroui-success) / 1)",
 					colorWarning: "hsl(var(--heroui-warning) / 1)",
 					colorDanger: "hsl(var(--heroui-danger) / 1)",
 					colorTextSecondary: "hsl(var(--heroui-secondary) / 1)",
