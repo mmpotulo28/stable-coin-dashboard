@@ -41,7 +41,8 @@ export default function ChargesPage() {
 			return;
 		}
 
-		await getUser({ id: userId });
+		const confirmedUser = await getUser({ id: userId });
+		if (confirmedUser) setConfirmedUserId(confirmedUser.id);
 	};
 
 	const handleReset = () => {
