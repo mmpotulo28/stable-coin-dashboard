@@ -27,7 +27,7 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { updateUser, updateUserError, updateUserLoading, updateUserMessage } = useLiskUsers({
-		apiKey,
+		apiKey: `Bearer ${apiKey}`,
 	});
 
 	const [form, setForm] = useState({

@@ -33,7 +33,7 @@ export function ApiTokenList() {
 		revokeTokenLoading,
 		revokeTokenMessage,
 		fetchTokens,
-	} = useLiskApiTokens({ apiKey });
+	} = useLiskApiTokens({ apiKey: `Bearer ${apiKey}` });
 
 	const [editId, setEditId] = useState<string | null>(null);
 	const [editDesc, setEditDesc] = useState("");

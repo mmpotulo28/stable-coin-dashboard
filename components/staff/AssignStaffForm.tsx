@@ -9,7 +9,7 @@ export function AssignStaffForm() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { assignStaffLoading, assignStaffError, assignStaff, assignStaffMessage } = useLiskStaff({
-		apiKey,
+		apiKey: `Bearer ${apiKey}`,
 	});
 
 	const [input, setInput] = useState("");

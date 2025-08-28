@@ -12,7 +12,7 @@ import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 const BusinessManagement = () => {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { float, loadingFloat, floatError } = useLiskBusiness({ apiKey });
+	const { float, loadingFloat, floatError } = useLiskBusiness({ apiKey: `Bearer ${apiKey}` });
 	return (
 		<div className="flex-1 overflow-auto p-6 space-y-8">
 			<h1 className="text-2xl font-semibold mb-6">Business Management</h1>

@@ -22,7 +22,9 @@ import { useOrganization } from "@clerk/nextjs";
 export function UserList({ limit = 10 }) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { fetchUsers, usersError, usersLoading, users } = useLiskUsers({ apiKey });
+	const { fetchUsers, usersError, usersLoading, users } = useLiskUsers({
+		apiKey: `Bearer ${apiKey}`,
+	});
 	const [selectedUser, setSelectedUser] = useState<iUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);

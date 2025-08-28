@@ -24,7 +24,9 @@ interface CreateUserModalProps {
 export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalProps) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { createUser, usersError, usersLoading, singleUser } = useLiskUsers({ apiKey });
+	const { createUser, usersError, usersLoading, singleUser } = useLiskUsers({
+		apiKey: `Bearer ${apiKey}`,
+	});
 
 	const [form, setForm] = useState<iUser>({
 		email: "",

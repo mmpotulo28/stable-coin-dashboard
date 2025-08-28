@@ -31,7 +31,10 @@ export function UpdateChargeModal({
 	const { user } = useUser();
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { updateCharge, chargesLoading, chargesError } = useLiskCharges({ apiKey, user });
+	const { updateCharge, chargesLoading, chargesError } = useLiskCharges({
+		apiKey: `Bearer ${apiKey}`,
+		user,
+	});
 	const [note, setNote] = useState("");
 	const [status, setStatus] = useState<"PENDING" | "COMPLETE">("PENDING");
 

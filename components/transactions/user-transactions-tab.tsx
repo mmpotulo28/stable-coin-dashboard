@@ -23,8 +23,8 @@ export function UserTransactionsTab() {
 	const [searched, setSearched] = useState(false);
 
 	const { fetchBalances, balancesLoading, balancesError, balances, balancesMessage } =
-		useLiskBalances({ apiKey });
-	const { users, fetchUsers } = useLiskUsers({ apiKey });
+		useLiskBalances({ apiKey: `Bearer ${apiKey}` });
+	const { users, fetchUsers } = useLiskUsers({ apiKey: `Bearer ${apiKey}` });
 
 	useEffect(() => {
 		fetchUsers();

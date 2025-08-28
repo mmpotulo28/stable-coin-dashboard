@@ -37,7 +37,7 @@ export function CouponFormModal({
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { createCoupon, createCouponError, createCouponLoading, createCouponMessage } =
-		useLiskCoupons({ apiKey });
+		useLiskCoupons({ apiKey: `Bearer ${apiKey}` });
 
 	const [form, setForm] = useState<iCouponCreateRequest>({
 		title: initial?.title || "",

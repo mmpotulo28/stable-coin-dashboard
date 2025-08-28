@@ -21,7 +21,9 @@ import { useOrganization } from "@clerk/nextjs";
 export function PendingTransactions() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { pendingTx, pendingLoading, pendingError, fetchPendingTx } = useLiskBusiness({ apiKey });
+	const { pendingTx, pendingLoading, pendingError, fetchPendingTx } = useLiskBusiness({
+		apiKey: `Bearer ${apiKey}`,
+	});
 	const [page, setPage] = useState(1);
 
 	// Fetch paginated transactions

@@ -9,7 +9,7 @@ export function FindRecipient() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { recipient, recipientLoading, recipientError, fetchRecipient } = useLiskTransfer({
-		apiKey,
+		apiKey: `Bearer ${apiKey}`,
 	});
 
 	const [recipientId, setRecipientId] = useState("");

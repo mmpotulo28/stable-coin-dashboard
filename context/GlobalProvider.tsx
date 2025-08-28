@@ -21,7 +21,7 @@ export function useGlobalContext() {
 export default function GlobalProvider({ children }: { children: React.ReactNode }) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { fetchUsers, users } = useLiskUsers({ apiKey });
+	const { fetchUsers, users } = useLiskUsers({ apiKey: `Bearer ${apiKey}` });
 
 	const [selectedUser, setSelectedUser] = useState<any>(null);
 

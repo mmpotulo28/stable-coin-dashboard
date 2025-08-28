@@ -25,7 +25,7 @@ export default function BankAccountsPage() {
 		upsertBankAccount,
 		deleteBankAccount,
 		createTransaction,
-	} = useLiskBank({ apiKey, user });
+	} = useLiskBank({ apiKey: `Bearer ${apiKey}`, user });
 
 	const [form, setForm] = useState({
 		accountHolder: "",

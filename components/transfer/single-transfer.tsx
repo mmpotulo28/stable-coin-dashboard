@@ -8,7 +8,7 @@ export function SingleTransfer() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { transferLoading, transferMessage, transferError, makeTransfer } = useLiskTransfer({
-		apiKey,
+		apiKey: `Bearer ${apiKey}`,
 	});
 
 	const [userId, setUserId] = useState("");

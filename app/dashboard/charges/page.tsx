@@ -23,7 +23,7 @@ export default function ChargesPage() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { users, fetchUsers, singleUser, getUser, usersError, usersLoading } = useLiskUsers({
-		apiKey,
+		apiKey: `Bearer ${apiKey}`,
 	});
 
 	const [userId, setUserId] = useState("");

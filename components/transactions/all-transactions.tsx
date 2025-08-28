@@ -22,8 +22,8 @@ export function AllTransactions() {
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
 	const { transactions, transactionsLoading, transactionsError, fetchTransactions } =
-		useLiskTransactions({ apiKey });
-	const { users, fetchUsers } = useLiskUsers({ apiKey });
+		useLiskTransactions({ apiKey: `Bearer ${apiKey}` });
+	const { users, fetchUsers } = useLiskUsers({ apiKey: `Bearer ${apiKey}` });
 
 	useEffect(() => {
 		fetchUsers();
