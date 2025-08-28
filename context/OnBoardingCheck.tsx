@@ -58,7 +58,6 @@ function OnboardingCheck({ children }: { children: React.ReactNode }) {
 					isOpen={showCreateOrg}
 					onClose={() => setShowCreateOrg(false)}
 					hideCloseButton
-					shouldCloseOnInteractOutside={() => false}
 					className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-default-50 w-fit">
 					<ModalContent>
 						<CreateOrganization path={path} afterCreateOrganizationUrl={path} />
@@ -75,7 +74,6 @@ function OnboardingCheck({ children }: { children: React.ReactNode }) {
 				isOpen={showModal && !!organization}
 				onClose={() => {}}
 				hideCloseButton
-				shouldCloseOnInteractOutside={() => false}
 				className="max-w-lg mx-auto rounded-2xl shadow-2xl bg-default-50 w-fit">
 				<ModalContent>
 					<OnboardingModal onComplete={() => setShowModal(false)} />
