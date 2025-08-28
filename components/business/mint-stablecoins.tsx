@@ -7,7 +7,7 @@ import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 export function MintStablecoins() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { mintForm, setMintForm, mintLoading, mintSuccess, mintError, mintStableCoins } =
+	const { mintForm, setMintForm, mintLoading, mintMessage, mintError, mintStableCoins } =
 		useLiskBusiness({ apiKey });
 
 	const handleMint = async (e: React.FormEvent) => {
@@ -62,7 +62,7 @@ export function MintStablecoins() {
 						startContent={<Icon icon="lucide:coins" />}>
 						Mint
 					</Button>
-					{mintSuccess && <div className="text-success mt-2">{mintSuccess}</div>}
+					{mintMessage && <div className="text-success mt-2">{mintMessage}</div>}
 					{mintError && <div className="text-danger mt-2">{mintError}</div>}
 				</form>
 			</CardBody>

@@ -10,13 +10,12 @@ import {
 	Avatar,
 	Spinner,
 } from "@heroui/react";
-import { IUser } from "@/types/users";
 import { Icon } from "@iconify/react";
-import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
+import { iUser, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 
 interface UpdateUserModalProps {
-	user: IUser | null;
+	user: iUser | null;
 	isOpen: boolean;
 	onClose: () => void;
 	onUpdated?: () => void;
@@ -27,6 +26,9 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUserModalProps) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { updateUser, updateUserError, updateUserLoading, updateUserMessage } = useLiskUsers({
+		apiKey,
+	});
 
 	const [form, setForm] = useState({
 		email: user?.email ?? "",
@@ -55,39 +57,11 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!user) return;
-		setLoading(true);
-		setError(null);
-		try {
-			const { data } = await axios.put<IUser>(
-				`${API_BASE}/users/${user.id}`,
-				{
-					email: form.email,
-					firstName: form.firstName,
-					lastName: form.lastName,
-					imageUrl: form.imageUrl,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: apiKey,
-					},
-				},
-			);
-			if (onUpdated) onUpdated();
-			onClose();
-		} catch (err: any) {
-			if (err?.response?.status === 400) {
-				setError("Validation error.");
-			} else if (err?.response?.status === 401) {
-				setError("Unauthorized.");
-			} else if (err?.response?.status === 404) {
-				setError("User not found.");
-			} else {
-				setError("Failed to update user.");
-			}
-		} finally {
-			setLoading(false);
-		}
+
+		const { email, firstName, lastName, imageUrl } = form;
+		await updateUser(user.id, { email, firstName, lastName, imageUrl });
+
+		if (onUpdated) onUpdated();
 	};
 
 	return (

@@ -9,7 +9,7 @@ function DepositWithdrawForm({
 	setTxForm,
 	onSubmit,
 	loading,
-	txSuccess,
+	txMessage,
 	txError,
 }: {
 	txForm: {
@@ -23,7 +23,7 @@ function DepositWithdrawForm({
 	setTxForm: React.Dispatch<React.SetStateAction<typeof txForm>>;
 	onSubmit: (e: React.FormEvent) => void;
 	loading: boolean;
-	txSuccess: string | null;
+	txMessage: string | null;
 	txError: string | null;
 }) {
 	return (
@@ -146,7 +146,7 @@ function DepositWithdrawForm({
 						</Button>
 					</div>
 				</form>
-				{txSuccess && <div className="text-success mt-2">{txSuccess}</div>}
+				{txMessage && <div className="text-success mt-2">{txMessage}</div>}
 				{txError && <div className="text-danger mt-2">{txError}</div>}
 			</CardBody>
 		</Card>

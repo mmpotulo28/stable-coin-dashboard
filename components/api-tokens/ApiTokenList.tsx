@@ -31,7 +31,7 @@ export function ApiTokenList() {
 		revokeToken,
 		revokeTokenError,
 		revokeTokenLoading,
-		revokeTokenSuccess,
+		revokeTokenMessage,
 		fetchTokens,
 	} = useLiskApiTokens({ apiKey });
 
@@ -175,8 +175,8 @@ export function ApiTokenList() {
 										{revokeTokenError && revokeId === token.id && (
 											<div className="text-danger">{revokeTokenError}</div>
 										)}
-										{revokeTokenSuccess && revokeId === token.id && (
-											<div className="text-success">{revokeTokenSuccess}</div>
+										{revokeTokenMessage && revokeId === token.id && (
+											<div className="text-success">{revokeTokenMessage}</div>
 										)}
 									</TableCell>
 								</TableRow>

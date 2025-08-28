@@ -1,4 +1,5 @@
-import { useLiskUsers } from "@/hooks/useLiskUsers";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 import { useContext, createContext, useState, useEffect } from "react";
 
 export interface GlobalContextType {
@@ -18,7 +19,10 @@ export function useGlobalContext() {
 }
 
 export default function GlobalProvider({ children }: { children: React.ReactNode }) {
-	const { users, fetchUsers } = useLiskUsers();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { fetchUsers, users } = useLiskUsers({ apiKey });
+
 	const [selectedUser, setSelectedUser] = useState<any>(null);
 
 	useEffect(() => {

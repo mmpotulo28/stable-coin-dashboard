@@ -11,15 +11,15 @@ import {
 	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUser } from "@/types/users";
+import { iUser } from "@mmpotulo/stablecoin-hooks";
 
 interface UserDetailsModalProps {
-	user: IUser | null;
+	user: iUser | null;
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-const getRole = (user: IUser) => user.role || "CUSTOMER";
+const getRole = (user: iUser) => user.role || "CUSTOMER";
 
 export function UserDetailsModal({ user, isOpen, onClose }: UserDetailsModalProps) {
 	return (

@@ -9,11 +9,11 @@ export function EnableGas() {
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const {
 		gasLoading,
-		gasSuccess,
+		gasMessage,
 		gasError,
 		enableBusinessGas,
 		userGasLoading,
-		userGasSuccess,
+		userGasMessage,
 		userGasError,
 		enableUserGas,
 	} = useLiskBusiness({ apiKey });
@@ -50,7 +50,7 @@ export function EnableGas() {
 							startContent={<Icon icon="lucide:zap" />}>
 							Enable Gas for Business
 						</Button>
-						{gasSuccess && <div className="text-success mt-2">{gasSuccess}</div>}
+						{gasMessage && <div className="text-success mt-2">{gasMessage}</div>}
 						{gasError && <div className="text-danger mt-2">{gasError}</div>}
 					</div>
 					<Divider orientation="vertical" className="hidden md:block mx-2" />
@@ -90,8 +90,8 @@ export function EnableGas() {
 								Enable Gas for User
 							</Button>
 						</form>
-						{userGasSuccess && (
-							<div className="text-success mt-2">{userGasSuccess}</div>
+						{userGasMessage && (
+							<div className="text-success mt-2">{userGasMessage}</div>
 						)}
 						{userGasError && <div className="text-danger mt-2">{userGasError}</div>}
 					</div>

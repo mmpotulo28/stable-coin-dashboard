@@ -11,14 +11,14 @@ import {
 	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUserTransaction } from "@/types/users";
+import { iTransaction } from "@mmpotulo/stablecoin-hooks";
 
 export function TransactionDetailsModal({
 	transaction,
 	isOpen,
 	onClose,
 }: {
-	transaction: IUserTransaction | undefined;
+	transaction: iTransaction | undefined;
 	isOpen: boolean;
 	onClose: () => void;
 }) {

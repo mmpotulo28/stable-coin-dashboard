@@ -9,12 +9,12 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUser } from "@/types/users";
 import axios from "axios";
 import { useOrganization } from "@clerk/nextjs";
+import { iUser, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 
 interface DeleteUserModalProps {
-	user: IUser | null;
+	user: iUser | null;
 	isOpen: boolean;
 	onClose: () => void;
 	onDeleted?: () => void;
@@ -25,30 +25,16 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUserModalProps) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const [deleting, setDeleting] = useState(false);
-	const [deleteError, setDeleteError] = useState<string | null>(null);
+	const { deleteUser, deleteUserError, deleteUserLoading, deleteUserMessage } = useLiskUsers({
+		apiKey,
+	});
 
 	const handleDelete = async () => {
 		if (!user) return;
-		setDeleting(true);
-		setDeleteError(null);
-		try {
-			await axios.delete(`${API_BASE}/users/${user.id}`, {
-				headers: { Authorization: apiKey },
-			});
-			onClose();
-			if (onDeleted) onDeleted();
-		} catch (err: any) {
-			if (err?.response?.status === 400) {
-				setDeleteError("Invalid user ID.");
-			} else if (err?.response?.status === 401) {
-				setDeleteError("Unauthorized.");
-			} else {
-				setDeleteError("Failed to delete user.");
-			}
-		} finally {
-			setDeleting(false);
-		}
+
+		await deleteUser(user.id);
+		onClose();
+		if (onDeleted) onDeleted();
 	};
 
 	return (
@@ -71,8 +57,10 @@ export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUser
 							<p className="text-default-500 text-sm">
 								This action cannot be undone.
 							</p>
-							{deleteError && (
-								<div className="text-danger font-medium mt-2">{deleteError}</div>
+							{deleteUserError && (
+								<div className="text-danger font-medium mt-2">
+									{deleteUserError}
+								</div>
 							)}
 						</div>
 					)}
@@ -82,15 +70,15 @@ export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUser
 						onPress={onClose}
 						variant="light"
 						className="mr-2"
-						isDisabled={deleting}>
+						isDisabled={deleteUserLoading}>
 						Cancel
 					</Button>
 					<Button
 						color="danger"
-						isLoading={deleting}
+						isLoading={deleteUserLoading}
 						onPress={handleDelete}
-						isDisabled={deleting || !user}>
-						{deleting ? <Spinner size="sm" /> : "Delete"}
+						isDisabled={deleteUserLoading || !user}>
+						{deleteUserLoading ? <Spinner size="sm" /> : "Delete"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

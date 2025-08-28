@@ -13,18 +13,17 @@ import {
 	Alert,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUser } from "@/types/users";
 import { UserDetailsModal } from "@/components/users/user-details-modal";
 import { UpdateUserModal } from "@/components/users/update-user-modal";
 import { DeleteUserModal } from "@/components/users/delete-user-modal";
-import { useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { iUser, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 import { useOrganization } from "@clerk/nextjs";
 
 export function UserList({ limit = 10 }) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { fetchUsers, errorUsers, loadingUsers, users } = useLiskUsers({ apiKey });
-	const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+	const { fetchUsers, usersError, usersLoading, users } = useLiskUsers({ apiKey });
+	const [selectedUser, setSelectedUser] = useState<iUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -33,19 +32,19 @@ export function UserList({ limit = 10 }) {
 		fetchUsers();
 	}, []);
 
-	const getRole = (user: IUser) => user.role || "CUSTOMER";
+	const getRole = (user: iUser) => user.role || "CUSTOMER";
 
-	const handleUserClick = (user: IUser) => {
+	const handleUserClick = (user: iUser) => {
 		setSelectedUser(user);
 		setIsModalOpen(true);
 	};
 
-	const handleUpdateClick = (user: IUser) => {
+	const handleUpdateClick = (user: iUser) => {
 		setSelectedUser(user);
 		setIsUpdateModalOpen(true);
 	};
 
-	const handleDeleteClick = (user: IUser) => {
+	const handleDeleteClick = (user: iUser) => {
 		setSelectedUser(user);
 		setIsDeleteModalOpen(true);
 	};
@@ -65,7 +64,7 @@ export function UserList({ limit = 10 }) {
 		setSelectedUser(null);
 	};
 
-	if (loadingUsers) {
+	if (usersLoading) {
 		return (
 			<div className="flex justify-center items-center py-8">
 				<Spinner label="Loading users..." />
@@ -73,8 +72,8 @@ export function UserList({ limit = 10 }) {
 		);
 	}
 
-	if (errorUsers) {
-		return <Alert title="Error" description={errorUsers} variant="bordered" color="danger" />;
+	if (usersError) {
+		return <Alert title="Error" description={usersError} variant="bordered" color="danger" />;
 	}
 
 	const displayUsers = users.slice(0, limit);

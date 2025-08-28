@@ -12,9 +12,8 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { ICharge } from "@/types/users";
 import { useOrganization, useUser } from "@clerk/nextjs";
-import { useLiskCharges } from "@mmpotulo/stablecoin-hooks";
+import { iCharge, useLiskCharges } from "@mmpotulo/stablecoin-hooks";
 
 export function UpdateChargeModal({
 	isOpen,
@@ -26,7 +25,7 @@ export function UpdateChargeModal({
 	isOpen: boolean;
 	onClose: () => void;
 	userId: string;
-	charge: ICharge | null;
+	charge: iCharge | null;
 	onUpdated?: () => void;
 }) {
 	const { user } = useUser();

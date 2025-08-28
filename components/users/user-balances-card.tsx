@@ -1,14 +1,14 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Chip, Spinner, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUserTokenBalance } from "@/types/users";
+import { iUserTokenBalance } from "@mmpotulo/stablecoin-hooks";
 
 export function UserBalancesCard({
 	balances,
 	loading,
 	error,
 }: {
-	balances: IUserTokenBalance[];
+	balances: iUserTokenBalance[];
 	loading: boolean;
 	error: string | null;
 }) {

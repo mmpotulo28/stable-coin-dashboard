@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Chip, Spinner, Image, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUserTokenBalance } from "@/types/users";
+import { iUserTokenBalance } from "@mmpotulo/stablecoin-hooks";
 
 export interface TokenBalanceProps {
-	float: IUserTokenBalance[];
+	float: iUserTokenBalance[];
 	loadingFloat: boolean;
 	floatError: string | undefined;
 }

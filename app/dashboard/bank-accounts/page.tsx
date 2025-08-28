@@ -42,7 +42,7 @@ export default function BankAccountsPage() {
 		transactionNetwork: "",
 		transactionAddress: "",
 	});
-	const [txSuccess, setTxSuccess] = useState<string | null>(null);
+	const [txMessage, setTxMessage] = useState<string | null>(null);
 	const [txError, setTxError] = useState<string | null>(null);
 
 	const handleSearch = async (e: React.FormEvent) => {
@@ -83,7 +83,7 @@ export default function BankAccountsPage() {
 
 	const handleTxSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setTxSuccess(null);
+		setTxMessage(null);
 		setTxError(null);
 		try {
 			const res = await createTransaction({
@@ -95,7 +95,7 @@ export default function BankAccountsPage() {
 				transactionNetwork: txForm.transactionNetwork,
 				transactionAddress: txForm.transactionAddress,
 			});
-			setTxSuccess(res?.message || "Transaction created successfully.");
+			setTxMessage(res?.message || "Transaction created successfully.");
 		} catch {
 			setTxError("Failed to create transaction.");
 		}
@@ -171,7 +171,7 @@ export default function BankAccountsPage() {
 							setTxForm={setTxForm}
 							onSubmit={handleTxSubmit}
 							loading={bankLoading}
-							txSuccess={txSuccess}
+							txMessage={txMessage}
 							txError={txError}
 						/>
 					)}

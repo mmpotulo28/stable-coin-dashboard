@@ -11,7 +11,7 @@ import {
 	Divider,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskBalances, useLiskTransactions, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { useLiskBalances, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 import { useOrganization } from "@clerk/nextjs";
 import { TokenBalances } from "../business/token-balances";
 
