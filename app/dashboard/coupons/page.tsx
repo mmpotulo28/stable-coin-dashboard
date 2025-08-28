@@ -1,30 +1,54 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Button, Chip, Spinner, Divider } from "@heroui/react";
+import { Card, CardHeader, CardBody, Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useCoupons } from "@/hooks/useCoupons";
-import { ICoupon, ICouponCreateRequest, ICouponUpdateRequest } from "@/types/users";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { CouponFormModal } from "@/components/coupons/CouponFormModal";
 import { ConfirmModal } from "@/components/coupons/ConfirmModal";
 import CouponCard from "@/components/coupons/coupon-card";
+import {
+	iCoupon,
+	iCouponCreateRequest,
+	iCouponUpdateRequest,
+	useLiskCoupons,
+} from "@mmpotulo/stablecoin-hooks";
 
 export default function CouponsPage() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
 	const {
 		coupons,
-		loading,
-		error,
+		couponsLoading,
+		couponsError,
 		fetchCoupons,
+
 		createCoupon,
+		createCouponError,
+		createCouponLoading,
+		createCouponMessage,
+
 		updateCoupon,
+		updateCouponError,
+		updateCouponLoading,
+		updateCouponMessage,
+
 		claimCoupon,
+		claimCouponError,
+		claimCouponLoading,
+		claimCouponMessage,
+
 		deleteCoupon,
-	} = useCoupons();
+		deleteCouponError,
+		deleteCouponLoading,
+		deleteCouponMessage,
+	} = useLiskCoupons({ apiKey });
+
 	const { user } = useUser();
 
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const [isEditOpen, setIsEditOpen] = useState(false);
-	const [editCoupon, setEditCoupon] = useState<ICoupon | null>(null);
+	const [editCoupon, setEditCoupon] = useState<iCoupon | null>(null);
 
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 	const [deleteCouponId, setDeleteCouponId] = useState<string | null>(null);
@@ -32,85 +56,38 @@ export default function CouponsPage() {
 	const [isClaimOpen, setIsClaimOpen] = useState(false);
 	const [claimCouponId, setClaimCouponId] = useState<string | null>(null);
 
-	const [actionLoading, setActionLoading] = useState(false);
-	const [actionMsg, setActionMsg] = useState<string | null>(null);
-
 	useEffect(() => {
 		fetchCoupons();
 	}, []);
 
-	useEffect(() => {
-		if (actionMsg) {
-			const timer = setTimeout(() => setActionMsg(null), 3000);
-			return () => clearTimeout(timer);
-		}
-	}, [actionMsg]);
-
 	// Create
-	const handleCreate = async (form: ICouponCreateRequest) => {
+	const handleCreate = async (form: iCouponCreateRequest) => {
 		if (!user?.id) return;
-		setActionLoading(true);
-		setActionMsg(null);
-		try {
-			await createCoupon(user.id, form);
-			setIsCreateOpen(false);
-			setActionMsg("Coupon created successfully.");
-		} catch {
-			setActionMsg("Failed to create coupon.");
-		} finally {
-			setActionLoading(false);
-		}
+		await createCoupon(user.id, form);
 	};
 
 	// Edit
-	const handleEdit = async (form: ICouponUpdateRequest) => {
+	const handleEdit = async (form: iCouponUpdateRequest) => {
 		if (!user?.id || !editCoupon) return;
-		setActionLoading(true);
-		setActionMsg(null);
-		try {
-			await updateCoupon(user.id, editCoupon.id, form);
-			setIsEditOpen(false);
-			setEditCoupon(null);
-			setActionMsg("Coupon updated successfully.");
-		} catch {
-			setActionMsg("Failed to update coupon.");
-		} finally {
-			setActionLoading(false);
-		}
+		await updateCoupon(user.id, editCoupon.id, form);
+		setIsEditOpen(false);
+		setEditCoupon(null);
 	};
 
 	// Delete
 	const handleDelete = async () => {
 		if (!user?.id || !deleteCouponId) return;
-		setActionLoading(true);
-		setActionMsg(null);
-		try {
-			await deleteCoupon(user.id, deleteCouponId);
-			setIsDeleteOpen(false);
-			setDeleteCouponId(null);
-			setActionMsg("Coupon deleted successfully.");
-		} catch {
-			setActionMsg("Failed to delete coupon.");
-		} finally {
-			setActionLoading(false);
-		}
+		await deleteCoupon(user.id, deleteCouponId);
+		setIsDeleteOpen(false);
+		setDeleteCouponId(null);
 	};
 
 	// Claim
 	const handleClaim = async () => {
 		if (!user?.id || !claimCouponId) return;
-		setActionLoading(true);
-		setActionMsg(null);
-		try {
-			await claimCoupon(user.id, claimCouponId);
-			setIsClaimOpen(false);
-			setClaimCouponId(null);
-			setActionMsg("Coupon claimed successfully.");
-		} catch {
-			setActionMsg("Failed to claim coupon.");
-		} finally {
-			setActionLoading(false);
-		}
+		await claimCoupon(user.id, claimCouponId);
+		setIsClaimOpen(false);
+		setClaimCouponId(null);
 	};
 
 	return (
@@ -127,7 +104,7 @@ export default function CouponsPage() {
 					Create Coupon
 				</Button>
 			</div>
-			{actionMsg && <div className="text-success text-center mb-4">{actionMsg}</div>}
+
 			<Card>
 				<CardHeader>
 					<div className="flex items-center gap-2">
@@ -140,30 +117,50 @@ export default function CouponsPage() {
 							className="ml-2"
 							aria-label="Refresh coupons"
 							onPress={fetchCoupons}
-							isDisabled={loading}>
+							isDisabled={couponsLoading}>
 							<Icon icon="lucide:refresh-cw" />
 						</Button>
 					</div>
 				</CardHeader>
 				<CardBody>
-					{loading ? (
+					{couponsLoading && (
 						<div className="flex items-center gap-2 justify-center py-8">
 							<Spinner label="Loading coupons..." />
 						</div>
-					) : error ? (
-						<div className="text-danger text-center py-8">{error}</div>
-					) : coupons.length === 0 ? (
+					)}
+					{couponsError && (
+						<div className="text-danger text-center py-8">{couponsError}</div>
+					)}
+
+					{createCouponError && (
+						<div className="text-danger text-center py-8">{createCouponError}</div>
+					)}
+
+					{updateCouponError && (
+						<div className="text-danger text-center py-8">{updateCouponError}</div>
+					)}
+
+					{claimCouponError && (
+						<div className="text-danger text-center py-8">{claimCouponError}</div>
+					)}
+
+					{deleteCouponError && (
+						<div className="text-danger text-center py-8">{deleteCouponError}</div>
+					)}
+
+					{!couponsLoading && coupons.length === 0 && (
 						<div className="flex flex-col items-center justify-center py-8">
 							<Icon icon="lucide:ticket" className="text-4xl text-default-400 mb-2" />
 							<div className="text-default-500 font-medium">No coupons found.</div>
 						</div>
-					) : (
+					)}
+
+					{!couponsLoading && coupons.length > 0 && (
 						<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-							{coupons.map((coupon: ICoupon) => (
+							{coupons.map((coupon: iCoupon) => (
 								<CouponCard
 									key={coupon.id}
 									coupon={coupon}
-									actionLoading={actionLoading}
 									setIsClaimOpen={setIsClaimOpen}
 									setClaimCouponId={setClaimCouponId}
 									setEditCoupon={setEditCoupon}
@@ -181,7 +178,6 @@ export default function CouponsPage() {
 				open={isCreateOpen}
 				onClose={() => setIsCreateOpen(false)}
 				onSubmit={handleCreate}
-				loading={actionLoading}
 			/>
 			{/* Edit Modal */}
 			<CouponFormModal
@@ -191,7 +187,6 @@ export default function CouponsPage() {
 					setEditCoupon(null);
 				}}
 				onSubmit={handleEdit}
-				loading={actionLoading}
 				initial={editCoupon || undefined}
 				isEdit
 			/>
@@ -205,7 +200,6 @@ export default function CouponsPage() {
 				onConfirm={handleDelete}
 				title="Delete Coupon"
 				message="Are you sure you want to delete this coupon? This action cannot be undone."
-				loading={actionLoading}
 				confirmText="Delete"
 				color="danger"
 			/>
@@ -219,7 +213,6 @@ export default function CouponsPage() {
 				onConfirm={handleClaim}
 				title="Claim Coupon"
 				message="Do you want to claim this coupon? This will credit it to your account."
-				loading={actionLoading}
 				confirmText="Claim"
 				color="primary"
 			/>

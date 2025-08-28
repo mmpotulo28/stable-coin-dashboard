@@ -16,19 +16,17 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { UpdateChargeModal } from "@/components/charges/UpdateChargeModal";
-import { useLiskCharges } from "@/hooks/useLiskCharges";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { useLiskCharges } from "@mmpotulo/stablecoin-hooks";
 
 export function ChargeList({ userId }: { userId: string }) {
-	const {
-		charges,
-		chargesLoading,
-		chargesError,
-		fetchCharges,
-		deleteCharge,
-		deleteLoading,
-		deleteError,
-		deleteSuccess,
-	} = useLiskCharges();
+	const { user } = useUser();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { charges, chargesLoading, chargesError, fetchCharges, deleteCharge } = useLiskCharges({
+		apiKey,
+		user,
+	});
 
 	const [search, setSearch] = useState("");
 	const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -122,7 +120,7 @@ export function ChargeList({ userId }: { userId: string }) {
 											<button
 												type="button"
 												aria-label="delete charge"
-												disabled={deleteLoading}
+												disabled={chargesLoading}
 												onClick={async () => {
 													setDeleteId(charge.id);
 													await deleteCharge({
@@ -132,7 +130,7 @@ export function ChargeList({ userId }: { userId: string }) {
 													setDeleteId(null);
 												}}
 												className="p-2 rounded-md hover:bg-default-100 text-danger">
-												{deleteLoading && deleteId === charge.id ? (
+												{chargesLoading && deleteId === charge.id ? (
 													<Spinner size="sm" />
 												) : (
 													<Icon icon="lucide:trash" className="text-xl" />
@@ -140,11 +138,8 @@ export function ChargeList({ userId }: { userId: string }) {
 											</button>
 										</div>
 
-										{deleteError && deleteId === charge.id && (
-											<div className="text-danger">{deleteError}</div>
-										)}
-										{deleteSuccess && deleteId === charge.id && (
-											<div className="text-success">{deleteSuccess}</div>
+										{chargesError && deleteId === charge.id && (
+											<div className="text-danger">{chargesError}</div>
 										)}
 									</TableCell>
 								</TableRow>

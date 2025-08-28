@@ -13,6 +13,7 @@ import {
 import { IUser } from "@/types/users";
 import { Icon } from "@iconify/react";
 import axios from "axios";
+import { useOrganization } from "@clerk/nextjs";
 
 interface UpdateUserModalProps {
 	user: IUser | null;
@@ -22,9 +23,11 @@ interface UpdateUserModalProps {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUserModalProps) {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
 	const [form, setForm] = useState({
 		email: user?.email ?? "",
 		firstName: user?.firstName ?? "",
@@ -66,7 +69,7 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 				{
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
+						Authorization: apiKey,
 					},
 				},
 			);

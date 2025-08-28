@@ -15,22 +15,25 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskApiTokens } from "@/hooks/useLiskApiTokens";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskApiTokens } from "@mmpotulo/stablecoin-hooks";
 
 export function ApiTokenList() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
 	const {
 		tokens,
-		loading,
-		error,
+		apiTokenLoading,
+		apiTokenError,
 		updateToken,
-		updateLoading,
-		updateError,
+		updateTokenError,
+		updateTokenLoading,
 		revokeToken,
-		revokeLoading,
-		revokeError,
-		revokeSuccess,
+		revokeTokenError,
+		revokeTokenLoading,
+		revokeTokenSuccess,
 		fetchTokens,
-	} = useLiskApiTokens();
+	} = useLiskApiTokens({ apiKey });
 
 	const [editId, setEditId] = useState<string | null>(null);
 	const [editDesc, setEditDesc] = useState("");
@@ -68,7 +71,7 @@ export function ApiTokenList() {
 						variant="light"
 						isIconOnly
 						onPress={() => fetchTokens()}
-						isLoading={loading}
+						isLoading={apiTokenLoading}
 						aria-label="Refresh"
 						className="ml-2">
 						<Icon icon="lucide:refresh-cw" />
@@ -76,10 +79,10 @@ export function ApiTokenList() {
 				</div>
 			</CardHeader>
 			<CardBody>
-				{loading ? (
+				{apiTokenLoading ? (
 					<Spinner label="Loading tokens..." />
-				) : error ? (
-					<div className="text-danger">{error}</div>
+				) : apiTokenError ? (
+					<div className="text-danger">{apiTokenError}</div>
 				) : (
 					<Table aria-label="API Tokens" removeWrapper>
 						<TableHeader>
@@ -110,7 +113,7 @@ export function ApiTokenList() {
 												<Button
 													type="submit"
 													size="sm"
-													isLoading={updateLoading}
+													isLoading={updateTokenLoading}
 													className="ml-2">
 													Save
 												</Button>
@@ -122,8 +125,10 @@ export function ApiTokenList() {
 													className="ml-2">
 													Cancel
 												</Button>
-												{updateError && (
-													<div className="text-danger">{updateError}</div>
+												{updateTokenError && (
+													<div className="text-danger">
+														{updateTokenError}
+													</div>
 												)}
 											</form>
 										) : (
@@ -157,7 +162,7 @@ export function ApiTokenList() {
 										<Button
 											size="sm"
 											color="danger"
-											isLoading={revokeLoading && revokeId === token.id}
+											isLoading={revokeTokenLoading && revokeId === token.id}
 											isDisabled={token.revoked}
 											onPress={async () => {
 												setRevokeId(token.id);
@@ -167,11 +172,11 @@ export function ApiTokenList() {
 											<Icon icon="lucide:trash" />
 											Revoke
 										</Button>
-										{revokeError && revokeId === token.id && (
-											<div className="text-danger">{revokeError}</div>
+										{revokeTokenError && revokeId === token.id && (
+											<div className="text-danger">{revokeTokenError}</div>
 										)}
-										{revokeSuccess && revokeId === token.id && (
-											<div className="text-success">{revokeSuccess}</div>
+										{revokeTokenSuccess && revokeId === token.id && (
+											<div className="text-success">{revokeTokenSuccess}</div>
 										)}
 									</TableCell>
 								</TableRow>

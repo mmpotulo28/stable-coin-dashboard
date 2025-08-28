@@ -11,6 +11,7 @@ import {
 import { Icon } from "@iconify/react";
 import { IUser } from "@/types/users";
 import axios from "axios";
+import { useOrganization } from "@clerk/nextjs";
 
 interface DeleteUserModalProps {
 	user: IUser | null;
@@ -20,9 +21,10 @@ interface DeleteUserModalProps {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
 
 export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUserModalProps) {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
 	const [deleting, setDeleting] = useState(false);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -32,7 +34,7 @@ export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUser
 		setDeleteError(null);
 		try {
 			await axios.delete(`${API_BASE}/users/${user.id}`, {
-				headers: { Authorization: API_TOKEN },
+				headers: { Authorization: apiKey },
 			});
 			onClose();
 			if (onDeleted) onDeleted();

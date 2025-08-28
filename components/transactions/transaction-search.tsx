@@ -12,23 +12,25 @@ import {
 	Divider,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransactions } from "@/hooks/useLiskTransactions";
 import { TransactionDetailsModal } from "@/components/transactions/transaction-details-modal";
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { useLiskUsers } from "@/hooks/useLiskUsers";
+import { useLiskUsers, useLiskTransactions } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 export function TransactionSearch() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
 	const [userId, setUserId] = useState("");
 	const [transactionId, setTransactionId] = useState("");
 	const [searched, setSearched] = useState(false);
-	const { users, fetchUsers } = useLiskUsers();
+	const { users, fetchUsers } = useLiskUsers({ apiKey });
 
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 
 	const { transaction, transactionLoading, transactionError, fetchSingleTransaction } =
-		useLiskTransactions();
+		useLiskTransactions({ apiKey });
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();

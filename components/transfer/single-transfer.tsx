@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Card, CardHeader, CardBody, Input, Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransfer } from "@/hooks/useLiskTransfer";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskTransfer } from "@mmpotulo/stablecoin-hooks";
 
 export function SingleTransfer() {
-	const { transferLoading, transferSuccess, transferError, makeTransfer } = useLiskTransfer();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { transferLoading, transferMessage, transferError, makeTransfer } = useLiskTransfer({
+		apiKey,
+	});
 
 	const [userId, setUserId] = useState("");
 	const [recipientId, setRecipientId] = useState("");
@@ -66,7 +71,7 @@ export function SingleTransfer() {
 						startContent={<Icon icon="lucide:send" />}>
 						Transfer
 					</Button>
-					{transferSuccess && <div className="text-success mt-2">{transferSuccess}</div>}
+					{transferMessage && <div className="text-success mt-2">{transferMessage}</div>}
 					{transferError && <div className="text-danger mt-2">{transferError}</div>}
 				</form>
 			</CardBody>

@@ -1,31 +1,31 @@
 "use client";
 import React, { useState } from "react";
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Input,
-	Button,
-	Chip,
-	Spinner,
-	Select,
-	SelectItem,
-	Divider,
-	Tabs,
-	Tab,
-} from "@heroui/react";
+import { Card, Input, Button, Spinner, Tabs, Tab } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useBank } from "@/hooks/useBank";
-import { iBankAccount } from "@/types/users";
 import BankAccountForm from "@/components/banks/BankAccountForm";
 import BankAccountView from "@/components/banks/BankAccountView";
 import DepositWithdrawForm from "@/components/banks/DepositWithdrawForm";
+import { useLiskBank } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization, useUser } from "@clerk/nextjs";
 
 // --- Main Page ---
 export default function BankAccountsPage() {
+	const { user } = useUser();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
 	const [editMode, setEditMode] = useState(false);
+
+	const {
+		bankAccount,
+		bankLoading,
+		bankError,
+		getBankAccount,
+		upsertBankAccount,
+		deleteBankAccount,
+		createTransaction,
+	} = useLiskBank({ apiKey, user });
 
 	const [form, setForm] = useState({
 		accountHolder: "",
@@ -44,16 +44,6 @@ export default function BankAccountsPage() {
 	});
 	const [txSuccess, setTxSuccess] = useState<string | null>(null);
 	const [txError, setTxError] = useState<string | null>(null);
-
-	const {
-		bankAccount,
-		loading,
-		error,
-		getBankAccount,
-		upsertBankAccount,
-		deleteBankAccount,
-		createTransaction,
-	} = useBank();
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -126,17 +116,17 @@ export default function BankAccountsPage() {
 							value={userId}
 							onChange={(e) => setUserId(e.target.value)}
 							className="max-w-xs w-full"
-							isDisabled={loading}
+							isDisabled={bankLoading}
 						/>
 						<Button
 							color="primary"
 							type="submit"
-							isDisabled={!userId.trim() || loading}
+							isDisabled={!userId.trim() || bankLoading}
 							startContent={<Icon icon="lucide:search" />}>
-							{loading ? <Spinner size="sm" /> : "Search"}
+							{bankLoading ? <Spinner size="sm" /> : "Search"}
 						</Button>
 					</form>
-					{error && <div className="text-danger mb-4">{error}</div>}
+					{bankError && <div className="text-danger mb-4">{bankError}</div>}
 					{searched && !editMode && !bankAccount && (
 						<div className="text-default-500 mb-4">
 							No bank account found for this user. You can create one below.
@@ -164,7 +154,7 @@ export default function BankAccountsPage() {
 								form={form}
 								setForm={setForm}
 								onSubmit={handleUpsert}
-								loading={loading}
+								loading={bankLoading}
 								onCancel={() => setEditMode(false)}
 								isEdit={!!bankAccount}
 							/>
@@ -180,7 +170,7 @@ export default function BankAccountsPage() {
 							txForm={txForm}
 							setTxForm={setTxForm}
 							onSubmit={handleTxSubmit}
-							loading={loading}
+							loading={bankLoading}
 							txSuccess={txSuccess}
 							txError={txError}
 						/>

@@ -1,14 +1,14 @@
-import { ICoupon } from "@/types/users";
+import { useOrganization } from "@clerk/nextjs";
 import { Button } from "@heroui/button";
 import { Card, Chip, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { iCoupon, useLiskCoupons } from "@mmpotulo/stablecoin-hooks";
 
 export interface iCouponCardProps {
-	coupon: ICoupon;
-	actionLoading: boolean;
+	coupon: iCoupon;
 	setIsClaimOpen: (value: boolean) => void;
 	setClaimCouponId: (id: string) => void;
-	setEditCoupon: (coupon: ICoupon) => void;
+	setEditCoupon: (coupon: iCoupon) => void;
 	setIsEditOpen: (value: boolean) => void;
 	setIsDeleteOpen: (value: boolean) => void;
 	setDeleteCouponId: (id: string) => void;
@@ -16,7 +16,6 @@ export interface iCouponCardProps {
 
 const CouponCard: React.FC<iCouponCardProps> = ({
 	coupon,
-	actionLoading,
 	setIsClaimOpen,
 	setClaimCouponId,
 	setEditCoupon,
@@ -24,6 +23,12 @@ const CouponCard: React.FC<iCouponCardProps> = ({
 	setIsDeleteOpen,
 	setDeleteCouponId,
 }) => {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
+	const { couponsLoading, claimCouponLoading, deleteCouponLoading, updateCouponLoading } =
+		useLiskCoupons({ apiKey });
+
 	return (
 		<Card key={coupon.id} className="p-4 bg-default-100 shadow rounded-xl">
 			<div className="flex items-center gap-2 mb-2">
@@ -55,7 +60,9 @@ const CouponCard: React.FC<iCouponCardProps> = ({
 						setIsClaimOpen(true);
 						setClaimCouponId(coupon.id);
 					}}
-					isDisabled={actionLoading || coupon.availableCoupons < 1}>
+					isDisabled={
+						couponsLoading || claimCouponLoading || coupon.availableCoupons < 1
+					}>
 					Claim
 				</Button>
 				<Button
@@ -65,7 +72,7 @@ const CouponCard: React.FC<iCouponCardProps> = ({
 						setEditCoupon(coupon);
 						setIsEditOpen(true);
 					}}
-					isDisabled={actionLoading}>
+					isDisabled={couponsLoading || updateCouponLoading}>
 					Edit
 				</Button>
 				<Button
@@ -76,7 +83,7 @@ const CouponCard: React.FC<iCouponCardProps> = ({
 						setIsDeleteOpen(true);
 						setDeleteCouponId(coupon.id);
 					}}
-					isDisabled={actionLoading}>
+					isDisabled={couponsLoading || deleteCouponLoading}>
 					Delete
 				</Button>
 			</div>

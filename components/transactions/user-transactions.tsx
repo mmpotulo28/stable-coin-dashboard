@@ -14,19 +14,19 @@ import {
 	Button,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { IUserTransaction } from "@/types/users";
 import { TransactionDetailsModal } from "./transaction-details-modal";
+import { iTransaction } from "@mmpotulo/stablecoin-hooks";
 
 export function UserTransactions({
 	transactions,
 	loading,
 	error,
 }: {
-	transactions: IUserTransaction[];
+	transactions: iTransaction[];
 	loading: boolean;
-	error: string | null;
+	error: string | undefined;
 }) {
-	const [selectedTx, setSelectedTx] = useState<IUserTransaction | null>(null);
+	const [selectedTx, setSelectedTx] = useState<iTransaction | undefined>(undefined);
 
 	return (
 		<Card className="max-w-2xl mx-auto mb-4">
@@ -91,7 +91,7 @@ export function UserTransactions({
 				<TransactionDetailsModal
 					transaction={selectedTx}
 					isOpen={!!selectedTx}
-					onClose={() => setSelectedTx(null)}
+					onClose={() => setSelectedTx(undefined)}
 				/>
 			</CardBody>
 		</Card>

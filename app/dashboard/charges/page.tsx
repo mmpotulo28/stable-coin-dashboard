@@ -14,24 +14,22 @@ import {
 import { Icon } from "@iconify/react";
 import { ChargeList } from "@/components/charges/ChargeList";
 import { CreateChargeModal } from "@/components/charges/CreateChargeModal";
-import axios from "axios";
 import OrgProPlanProvider from "@/context/OrgRequiredProvider";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { useLiskUsers } from "@/hooks/useLiskUsers";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 
 export default function ChargesPage() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { users, fetchUsers, singleUser, getUser, usersError, usersLoading } = useLiskUsers({
+		apiKey,
+	});
+
 	const [userId, setUserId] = useState("");
 	const [confirmedUserId, setConfirmedUserId] = useState<string | null>(null);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
-	const [checkingUser, setCheckingUser] = useState(false);
-	const [userError, setUserError] = useState<string | null>();
-	const [userInfo, setUserInfo] = useState<any>(null);
-	const [showCheckingMsg, setShowCheckingMsg] = useState(false);
 	const { globalUsers } = useGlobalContext();
-	const { users, fetchUsers } = useLiskUsers();
 
 	useEffect(() => {
 		fetchUsers();
@@ -40,36 +38,15 @@ export default function ChargesPage() {
 	const handleConfirm = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!userId.trim()) {
-			setUserError("User ID is required.");
 			return;
 		}
-		setCheckingUser(true);
-		setShowCheckingMsg(true);
-		setUserError(null);
-		setUserInfo(null);
-		try {
-			const { data } = await axios.get<{ user: any }>(`${API_BASE}/users/${userId.trim()}`, {
-				headers: { Authorization: API_TOKEN },
-			});
-			setUserInfo(data.user);
-			setConfirmedUserId(userId.trim());
-		} catch (err: any) {
-			if (err?.response?.status === 404) setUserError("User not found.");
-			else if (err?.response?.status === 400) setUserError("Invalid user ID.");
-			else if (err?.response?.status === 401) setUserError("Unauthorized.");
-			else setUserError("Failed to fetch user.");
-		} finally {
-			setCheckingUser(false);
-			setTimeout(() => setShowCheckingMsg(false), 800);
-		}
+
+		await getUser({ id: userId });
 	};
 
 	const handleReset = () => {
 		setUserId("");
 		setConfirmedUserId(null);
-		setUserInfo(null);
-		setUserError(null);
-		setShowCheckingMsg(false);
 	};
 
 	console.log("global users", globalUsers);
@@ -106,7 +83,7 @@ export default function ChargesPage() {
 								size="md"
 								label="User ID (optional)"
 								autoFocus
-								isDisabled={checkingUser}
+								isDisabled={usersLoading}
 								className="w-full"
 							/>
 
@@ -134,27 +111,27 @@ export default function ChargesPage() {
 								color="primary"
 								type="submit"
 								className="w-full"
-								isDisabled={!userId.trim() || checkingUser}
+								isDisabled={!userId.trim() || usersLoading}
 								startContent={<Icon icon="lucide:search" />}>
-								{checkingUser ? <Spinner size="sm" /> : "Proceed"}
+								{usersLoading ? <Spinner size="sm" /> : "Proceed"}
 							</Button>
 						</form>
-						{showCheckingMsg && (
+						{usersLoading && (
 							<div className="flex items-center gap-2 mt-4 text-default-500">
 								<Spinner size="sm" />
 								<span>Checking if user exists...</span>
 							</div>
 						)}
-						{userError && (
-							<div className="text-danger mt-4 font-medium">{userError}</div>
+						{usersError && (
+							<div className="text-danger mt-4 font-medium">{usersError}</div>
 						)}
-						{userInfo && (
+						{singleUser && (
 							<div className="mt-4 flex flex-col items-center gap-2">
 								<Chip color="primary" variant="flat">
-									{userInfo.email}
+									{singleUser.email}
 								</Chip>
 								<div className="text-default-500 text-xs">
-									User found: {userInfo.firstName} {userInfo.lastName}
+									User found: {singleUser.firstName} {singleUser.lastName}
 								</div>
 							</div>
 						)}

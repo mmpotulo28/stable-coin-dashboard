@@ -14,6 +14,8 @@ import {
 import { Icon } from "@iconify/react";
 import axios from "axios";
 import { IUser } from "@/types/users";
+import { iUser, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 interface CreateUserModalProps {
 	isOpen: boolean;
@@ -21,10 +23,11 @@ interface CreateUserModalProps {
 	onCreated?: (user?: IUser) => void;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN as string;
-
 export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalProps) {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { createUser, errorUsers, loadingUsers, singleUser } = useLiskUsers({ apiKey });
+
 	const [form, setForm] = useState({
 		email: "",
 		firstName: "",
@@ -32,8 +35,6 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 		role: "CUSTOMER",
 		imageUrl: "https://illustrations.popsy.co/gray/man-with-short-hair-avatar.svg",
 	});
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -47,44 +48,8 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
-		setError(null);
-		try {
-			const { data } = await axios.post<IUser>(
-				`${API_BASE}/users`,
-				{
-					email: form.email,
-					firstName: form.firstName,
-					lastName: form.lastName,
-					role: form.role,
-					imageUrl: form.imageUrl,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: API_TOKEN,
-					},
-				},
-			);
-			if (onCreated) onCreated(data);
-			setForm({
-				email: "",
-				firstName: "",
-				lastName: "",
-				role: "CUSTOMER",
-				imageUrl: "https://illustrations.popsy.co/gray/man-with-short-hair-avatar.svg",
-			});
-		} catch (err: any) {
-			if (err?.response?.status === 400) {
-				setError("Validation error.");
-			} else if (err?.response?.status === 401) {
-				setError("Unauthorized.");
-			} else {
-				setError("Failed to create user.");
-			}
-		} finally {
-			setLoading(false);
-		}
+		const user = await createUser(form);
+		onCreated?.(user as iUser);
 	};
 
 	return (
@@ -140,26 +105,30 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 								onChange={handleChange}
 							/>
 						</div>
-						{error && <div className="text-danger font-medium">{error}</div>}
+						{errorUsers && <div className="text-danger font-medium">{errorUsers}</div>}
 					</form>
 				</ModalBody>
 				<ModalFooter className="flex justify-end pt-2">
-					<Button onPress={onClose} variant="light" className="mr-2" isDisabled={loading}>
+					<Button
+						onPress={onClose}
+						variant="light"
+						className="mr-2"
+						isDisabled={loadingUsers}>
 						Cancel
 					</Button>
 					<Button
 						color="primary"
 						type="submit"
-						isLoading={loading}
+						isLoading={loadingUsers}
 						onClick={handleSubmit}
 						isDisabled={
-							loading ||
+							loadingUsers ||
 							!form.email ||
 							!form.firstName ||
 							!form.lastName ||
 							!form.role
 						}>
-						{loading ? <Spinner size="sm" /> : "Create"}
+						{loadingUsers ? <Spinner size="sm" /> : "Create"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

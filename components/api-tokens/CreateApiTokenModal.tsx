@@ -11,10 +11,15 @@ import {
 	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskApiTokens } from "@/hooks/useLiskApiTokens";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskApiTokens } from "@mmpotulo/stablecoin-hooks";
 
 export function CreateApiTokenModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-	const { createToken, createLoading, createError, createdToken } = useLiskApiTokens();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { createToken, createTokenLoading, createTokenError, createdToken } = useLiskApiTokens({
+		apiKey,
+	});
 	const [desc, setDesc] = useState("");
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -40,8 +45,8 @@ export function CreateApiTokenModal({ isOpen, onClose }: { isOpen: boolean; onCl
 							onChange={(e) => setDesc(e.target.value)}
 							placeholder="e.g. For backend integration"
 						/>
-						{createError && (
-							<div className="text-danger font-medium">{createError}</div>
+						{createTokenError && (
+							<div className="text-danger font-medium">{createTokenError}</div>
 						)}
 						{createdToken && (
 							<div className="space-y-2">
@@ -65,16 +70,16 @@ export function CreateApiTokenModal({ isOpen, onClose }: { isOpen: boolean; onCl
 						onPress={onClose}
 						variant="light"
 						className="mr-2"
-						isDisabled={createLoading}>
+						isDisabled={createTokenLoading}>
 						Close
 					</Button>
 					<Button
 						color="primary"
 						type="submit"
-						isLoading={createLoading}
+						isLoading={createTokenLoading}
 						onClick={handleSubmit}
-						isDisabled={createLoading}>
-						{createLoading ? <Spinner size="sm" /> : "Create"}
+						isDisabled={createTokenLoading}>
+						{createTokenLoading ? <Spinner size="sm" /> : "Create"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

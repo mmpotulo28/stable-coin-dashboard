@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Card, CardHeader, CardBody, Input, Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransfer } from "@/hooks/useLiskTransfer";
 import { UserDetailsCard } from "../users/user-details-card";
+import { useLiskTransfer } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 export function FindRecipient() {
-	const { recipient, recipientLoading, recipientError, fetchRecipient } = useLiskTransfer();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { recipient, recipientLoading, recipientError, fetchRecipient } = useLiskTransfer({
+		apiKey,
+	});
 
 	const [recipientId, setRecipientId] = useState("");
 

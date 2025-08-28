@@ -1,11 +1,19 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Button, Input, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskBusiness } from "@/hooks/useLiskBusiness";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 
 export function MintStablecoins() {
-	const { mintForm, setMintForm, mintLoading, mintSuccess, mintError, handleMint } =
-		useLiskBusiness();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { mintForm, setMintForm, mintLoading, mintSuccess, mintError, mintStableCoins } =
+		useLiskBusiness({ apiKey });
+
+	const handleMint = async (e: React.FormEvent) => {
+		e.preventDefault();
+		await mintStableCoins();
+	};
 
 	return (
 		<Card>

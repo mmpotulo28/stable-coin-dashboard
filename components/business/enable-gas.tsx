@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	Button,
-	Spinner,
-	Input,
-	Divider,
-	Tooltip,
-} from "@heroui/react";
+import { Card, CardHeader, CardBody, Button, Input, Divider, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskBusiness } from "@/hooks/useLiskBusiness";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 
 export function EnableGas() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
 	const {
 		gasLoading,
 		gasSuccess,
 		gasError,
-		handleEnableGas,
+		enableBusinessGas,
 		userGasLoading,
 		userGasSuccess,
 		userGasError,
 		enableUserGas,
-	} = useLiskBusiness();
+	} = useLiskBusiness({ apiKey });
 
 	const [userId, setUserId] = useState("");
 
@@ -50,7 +44,7 @@ export function EnableGas() {
 						</p>
 						<Button
 							color="primary"
-							onPress={handleEnableGas}
+							onPress={enableBusinessGas}
 							isLoading={gasLoading}
 							isDisabled={gasLoading}
 							startContent={<Icon icon="lucide:zap" />}>

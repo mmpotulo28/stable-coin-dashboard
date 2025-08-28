@@ -18,7 +18,7 @@ export function TransactionDetailsModal({
 	isOpen,
 	onClose,
 }: {
-	transaction: IUserTransaction | null;
+	transaction: IUserTransaction | undefined;
 	isOpen: boolean;
 	onClose: () => void;
 }) {

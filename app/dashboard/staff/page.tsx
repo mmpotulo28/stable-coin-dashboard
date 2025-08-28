@@ -1,39 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useStaff } from "@/hooks/useStaff";
-import { useUser } from "@clerk/nextjs";
+
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { AssignStaffForm } from "@/components/staff/AssignStaffForm";
 import { StaffList } from "@/components/staff/StaffList";
 
 import { Icon } from "@iconify/react";
 import { Button } from "@heroui/react";
 import OrgProPlanProvider from "@/context/OrgRequiredProvider";
+import { useLiskStaff } from "@mmpotulo/stablecoin-hooks";
 
 export default function StaffPage() {
 	const { user } = useUser();
-	const { staff, loading, error, actionMsg, fetchStaff, assignStaff, removeStaff, setActionMsg } =
-		useStaff();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { staffLoading, fetchStaff } = useLiskStaff({ apiKey });
 
 	useEffect(() => {
 		fetchStaff(user?.id || "");
 	}, [user?.id]);
-
-	useEffect(() => {
-		if (actionMsg) {
-			const timer = setTimeout(() => setActionMsg(null), 3000);
-			return () => clearTimeout(timer);
-		}
-	}, [actionMsg, setActionMsg]);
-
-	const handleAssign = async (input: string) => {
-		if (!user?.id) return;
-		await assignStaff(user.id, input);
-	};
-
-	const handleRemove = async (id: string) => {
-		if (!user?.id) return;
-		await removeStaff(user.id, id);
-	};
 
 	return (
 		<OrgProPlanProvider>
@@ -48,16 +33,15 @@ export default function StaffPage() {
 						color="secondary"
 						variant="bordered"
 						aria-label="Refresh staff"
-						isLoading={loading}
+						isLoading={staffLoading}
 						onPress={() => fetchStaff(user?.id || "")}
-						isDisabled={loading}>
+						isDisabled={staffLoading}>
 						<Icon icon="lucide:refresh-cw" />
 					</Button>
 				</div>
 
-				{actionMsg && <div className="text-success text-center mb-4">{actionMsg}</div>}
-				<AssignStaffForm onAssign={handleAssign} loading={loading} />
-				<StaffList staff={staff} loading={loading} error={error} onRemove={handleRemove} />
+				<AssignStaffForm />
+				<StaffList />
 			</div>
 		</OrgProPlanProvider>
 	);

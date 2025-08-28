@@ -11,16 +11,19 @@ import {
 	Divider,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransactions } from "@/hooks/useLiskTransactions";
 import { UserTransactions } from "@/components/transactions/user-transactions";
-import { useLiskUsers } from "@/hooks/useLiskUsers";
+import { useLiskTransactions, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 export function AllTransactions() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
-	const { transactions, transactionsLoading, transactionsError, fetchUserTransactions } =
-		useLiskTransactions();
-	const { users, fetchUsers } = useLiskUsers();
+	const { transactions, transactionsLoading, transactionsError, fetchTransactions } =
+		useLiskTransactions({ apiKey });
+	const { users, fetchUsers } = useLiskUsers({ apiKey });
 
 	useEffect(() => {
 		fetchUsers();
@@ -29,7 +32,7 @@ export function AllTransactions() {
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!userId.trim()) return;
-		await fetchUserTransactions(userId.trim());
+		await fetchTransactions(userId.trim());
 		setSearched(true);
 	};
 

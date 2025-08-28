@@ -13,7 +13,8 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { ICharge } from "@/types/users";
-import { useLiskCharges } from "@/hooks/useLiskCharges";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { useLiskCharges } from "@mmpotulo/stablecoin-hooks";
 
 export function UpdateChargeModal({
 	isOpen,
@@ -28,7 +29,10 @@ export function UpdateChargeModal({
 	charge: ICharge | null;
 	onUpdated?: () => void;
 }) {
-	const { updateCharge, updateLoading, updateError } = useLiskCharges();
+	const { user } = useUser();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { updateCharge, chargesLoading, chargesError } = useLiskCharges({ apiKey, user });
 	const [note, setNote] = useState("");
 	const [status, setStatus] = useState<"PENDING" | "COMPLETE">("PENDING");
 
@@ -77,8 +81,8 @@ export function UpdateChargeModal({
 								<SelectItem key="PENDING">PENDING</SelectItem>
 								<SelectItem key="COMPLETE">COMPLETE</SelectItem>
 							</Select>
-							{updateError && (
-								<div className="text-danger font-medium">{updateError}</div>
+							{chargesError && (
+								<div className="text-danger font-medium">{chargesError}</div>
 							)}
 						</form>
 					) : (
@@ -90,16 +94,16 @@ export function UpdateChargeModal({
 						onPress={onClose}
 						variant="light"
 						className="mr-2"
-						isDisabled={updateLoading}>
+						isDisabled={chargesLoading}>
 						Cancel
 					</Button>
 					<Button
 						color="primary"
 						type="submit"
-						isLoading={updateLoading}
+						isLoading={chargesLoading}
 						onClick={handleSubmit}
-						isDisabled={updateLoading || !charge}>
-						{updateLoading ? <Spinner size="sm" /> : "Update"}
+						isDisabled={chargesLoading || !charge}>
+						{chargesLoading ? <Spinner size="sm" /> : "Update"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

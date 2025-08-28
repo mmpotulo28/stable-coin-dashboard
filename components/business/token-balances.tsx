@@ -1,13 +1,12 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Chip, Spinner, Image, Alert } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskBusiness } from "@/hooks/useLiskBusiness";
 import { IUserTokenBalance } from "@/types/users";
 
 export interface TokenBalanceProps {
 	float: IUserTokenBalance[];
 	loadingFloat: boolean;
-	floatError: string | null;
+	floatError: string | undefined;
 }
 
 export function TokenBalances({ float, loadingFloat, floatError }: TokenBalanceProps) {

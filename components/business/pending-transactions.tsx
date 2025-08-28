@@ -15,16 +15,18 @@ import {
 	Snippet,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskBusiness } from "@/hooks/useLiskBusiness";
+import { iPendingTx, useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 export function PendingTransactions() {
-	const { pendingTx, pendingLoading, pendingError, fetchPendingTx } = useLiskBusiness();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { pendingTx, pendingLoading, pendingError, fetchPendingTx } = useLiskBusiness({ apiKey });
 	const [page, setPage] = useState(1);
 
 	// Fetch paginated transactions
 	useEffect(() => {
-		fetchPendingTx(page, 5);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		fetchPendingTx();
 	}, [page]);
 
 	return (
@@ -56,7 +58,7 @@ export function PendingTransactions() {
 								<TableColumn>CREATED AT</TableColumn>
 							</TableHeader>
 							<TableBody>
-								{pendingTx?.transactions?.map((tx: any) => (
+								{pendingTx?.map((tx: iPendingTx) => (
 									<TableRow key={tx.id}>
 										<TableCell>{tx.id}</TableCell>
 										<TableCell>
@@ -75,7 +77,9 @@ export function PendingTransactions() {
 										<TableCell>
 											<Chip
 												color={
-													tx.status === "pending" ? "warning" : "default"
+													(tx.status as string) === "pending"
+														? "warning"
+														: "default"
 												}
 												variant="flat">
 												{tx.status}
@@ -94,7 +98,7 @@ export function PendingTransactions() {
 							<div className="flex justify-end mt-4">
 								<Pagination
 									page={page}
-									total={pendingTx?.totalPages}
+									total={Math.ceil((pendingTx?.length ?? 0) / 10)}
 									onChange={setPage}
 									showControls
 								/>

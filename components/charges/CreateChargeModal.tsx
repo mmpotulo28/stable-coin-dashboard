@@ -10,7 +10,8 @@ import {
 	Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskCharges } from "@/hooks/useLiskCharges";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { useLiskCharges } from "@mmpotulo/stablecoin-hooks";
 
 export function CreateChargeModal({
 	isOpen,
@@ -21,7 +22,13 @@ export function CreateChargeModal({
 	onClose: () => void;
 	userId: string;
 }) {
-	const { createCharge, createLoading, createError, createdCharge } = useLiskCharges();
+	const { user } = useUser();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { createCharge, chargesLoading, chargesError, charge } = useLiskCharges({
+		apiKey,
+		user,
+	});
 	const [paymentId, setPaymentId] = useState("");
 	const [amount, setAmount] = useState("");
 	const [note, setNote] = useState("");
@@ -69,14 +76,14 @@ export function CreateChargeModal({
 							onChange={(e) => setNote(e.target.value)}
 							placeholder="Optional note"
 						/>
-						{createError && (
-							<div className="text-danger font-medium">{createError}</div>
+						{chargesError && (
+							<div className="text-danger font-medium">{chargesError}</div>
 						)}
-						{createdCharge && (
+						{charge && (
 							<div className="space-y-2">
 								<div className="text-success font-medium">Charge created!</div>
 								<div className="text-default-500 text-xs">
-									Share this payment link: <b>{createdCharge.paymentId}</b>
+									Share this payment link: <b>{charge.paymentId}</b>
 								</div>
 							</div>
 						)}
@@ -87,16 +94,16 @@ export function CreateChargeModal({
 						onPress={onClose}
 						variant="light"
 						className="mr-2"
-						isDisabled={createLoading}>
+						isDisabled={chargesLoading}>
 						Close
 					</Button>
 					<Button
 						color="primary"
 						type="submit"
-						isLoading={createLoading}
+						isLoading={chargesLoading}
 						onClick={handleSubmit}
-						isDisabled={createLoading || !paymentId || !amount}>
-						{createLoading ? <Spinner size="sm" /> : "Create"}
+						isDisabled={chargesLoading || !paymentId || !amount}>
+						{chargesLoading ? <Spinner size="sm" /> : "Create"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

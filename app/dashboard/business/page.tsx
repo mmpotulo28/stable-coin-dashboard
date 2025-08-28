@@ -6,10 +6,13 @@ import { TokenBalances } from "@/components/business/token-balances";
 import { EnableGas } from "@/components/business/enable-gas";
 import { PendingTransactions } from "@/components/business/pending-transactions";
 import { MintStablecoins } from "@/components/business/mint-stablecoins";
-import { useLiskBusiness } from "@/hooks/useLiskBusiness";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 
 const BusinessManagement = () => {
-	const { float, loadingFloat, floatError } = useLiskBusiness();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { float, loadingFloat, floatError } = useLiskBusiness({ apiKey });
 	return (
 		<div className="flex-1 overflow-auto p-6 space-y-8">
 			<h1 className="text-2xl font-semibold mb-6">Business Management</h1>

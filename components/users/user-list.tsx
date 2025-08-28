@@ -17,10 +17,13 @@ import { IUser } from "@/types/users";
 import { UserDetailsModal } from "@/components/users/user-details-modal";
 import { UpdateUserModal } from "@/components/users/update-user-modal";
 import { DeleteUserModal } from "@/components/users/delete-user-modal";
-import { useLiskUsers } from "@/hooks/useLiskUsers";
+import { useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 
 export function UserList({ limit = 10 }) {
-	const { users, loadingUsers, errorUsers, fetchUsers } = useLiskUsers();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { fetchUsers, errorUsers, loadingUsers, users } = useLiskUsers({ apiKey });
 	const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);

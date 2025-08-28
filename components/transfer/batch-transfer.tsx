@@ -14,10 +14,14 @@ import {
 	TableCell,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransfer } from "@/hooks/useLiskTransfer";
+import { useOrganization } from "@clerk/nextjs";
+import { useLiskTransfer } from "@mmpotulo/stablecoin-hooks";
 
 export function BatchTransfer() {
-	const { batchLoading, batchSuccess, batchError, makeBatchTransfer } = useLiskTransfer();
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { batchTransferLoading, batchTransferMessage, batchTransferError, makeBatchTransfer } =
+		useLiskTransfer({ apiKey });
 
 	const [userId, setUserId] = useState("");
 	const [recipientId, setRecipientId] = useState("");
@@ -101,13 +105,19 @@ export function BatchTransfer() {
 					<Button
 						color="primary"
 						type="submit"
-						isLoading={batchLoading}
-						isDisabled={batchLoading || !userId.trim() || batchPayments.length === 0}
+						isLoading={batchTransferLoading}
+						isDisabled={
+							batchTransferLoading || !userId.trim() || batchPayments.length === 0
+						}
 						startContent={<Icon icon="lucide:list-plus" />}>
 						Execute Batch Transfer
 					</Button>
-					{batchSuccess && <div className="text-success mt-2">{batchSuccess}</div>}
-					{batchError && <div className="text-danger mt-2">{batchError}</div>}
+					{batchTransferMessage && (
+						<div className="text-success mt-2">{batchTransferMessage}</div>
+					)}
+					{batchTransferError && (
+						<div className="text-danger mt-2">{batchTransferError}</div>
+					)}
 				</form>
 
 				<Table aria-label="Batch Payments" removeWrapper className="mb-4 flex-2">

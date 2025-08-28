@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	Card,
 	CardHeader,
@@ -11,34 +11,34 @@ import {
 	Divider,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useLiskTransactions } from "@/hooks/useLiskTransactions";
+import { useLiskBalances, useLiskTransactions, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
+import { useOrganization } from "@clerk/nextjs";
 import { TokenBalances } from "../business/token-balances";
-import { useLiskUsers } from "@/hooks/useLiskUsers";
 
 export function UserTransactionsTab() {
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+
 	const [userId, setUserId] = useState("");
 	const [searched, setSearched] = useState(false);
-	const {
-		balances,
-		balancesLoading,
-		balancesError,
-		fetchUserBalances,
 
-		fetchUserTransactions,
-	} = useLiskTransactions();
-	const { users, fetchUsers } = useLiskUsers();
+	const { fetchBalances, balancesLoading, balancesError, balances, balancesMessage } =
+		useLiskBalances({ apiKey });
+	const { users, fetchUsers } = useLiskUsers({ apiKey });
 
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 
-	const handleSearch = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!userId.trim()) return;
-		await fetchUserBalances(userId.trim());
-		await fetchUserTransactions(userId.trim());
-		setSearched(true);
-	};
+	const handleSearch = useCallback(
+		async (e: React.FormEvent) => {
+			e.preventDefault();
+			if (!userId.trim()) return;
+			await fetchBalances(userId.trim());
+			setSearched(true);
+		},
+		[userId, fetchBalances],
+	);
 
 	return (
 		<Card className="max-w-2xl mx-auto mb-8">
@@ -49,6 +49,14 @@ export function UserTransactionsTab() {
 				</div>
 			</CardHeader>
 			<CardBody>
+				{balancesMessage && (
+					<div className="text-success text-center mb-4">{balancesMessage}</div>
+				)}
+
+				{balancesError && (
+					<div className="text-error text-center mb-4">{balancesError}</div>
+				)}
+
 				<form onSubmit={handleSearch} className="flex flex-col gap-3 mb-4">
 					<div className="w-full flex gap-3 items-center">
 						<Input
@@ -94,7 +102,7 @@ export function UserTransactionsTab() {
 					<TokenBalances
 						float={balances}
 						loadingFloat={balancesLoading}
-						floatError={balancesError}
+						floatError={balancesError as string}
 					/>
 				)}
 			</CardBody>

@@ -7,10 +7,10 @@ import {
 	ModalFooter,
 	Input,
 	Button,
-	DatePicker,
 } from "@heroui/react";
-import { ICouponCreateRequest } from "@/types/users";
 import { Icon } from "@iconify/react";
+import { useOrganization } from "@clerk/nextjs";
+import { iCouponCreateRequest, useLiskCoupons } from "@mmpotulo/stablecoin-hooks";
 
 function generateCouponRef(length = 16) {
 	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -25,18 +25,21 @@ export function CouponFormModal({
 	open,
 	onClose,
 	onSubmit,
-	loading,
 	initial,
 	isEdit,
 }: {
 	open: boolean;
 	onClose: () => void;
-	onSubmit: (form: ICouponCreateRequest) => void;
-	loading: boolean;
-	initial?: Partial<ICouponCreateRequest>;
+	onSubmit: (form: iCouponCreateRequest) => void;
+	initial?: Partial<iCouponCreateRequest>;
 	isEdit?: boolean;
 }) {
-	const [form, setForm] = useState<ICouponCreateRequest>({
+	const { organization } = useOrganization();
+	const apiKey = organization?.publicMetadata.apiToken as string;
+	const { createCoupon, createCouponError, createCouponLoading, createCouponMessage } =
+		useLiskCoupons({ apiKey });
+
+	const [form, setForm] = useState<iCouponCreateRequest>({
 		title: initial?.title || "",
 		imageUrl: initial?.imageUrl || "",
 		description: initial?.description || "",
@@ -153,9 +156,9 @@ export function CouponFormModal({
 						<Button
 							color="primary"
 							type="submit"
-							isLoading={loading}
+							isLoading={createCouponLoading}
 							isDisabled={
-								loading ||
+								createCouponLoading ||
 								!form.title ||
 								!form.description ||
 								!form.code ||
