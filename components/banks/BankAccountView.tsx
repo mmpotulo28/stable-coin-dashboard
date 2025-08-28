@@ -1,7 +1,7 @@
-import { iBankAccount } from "@/types/users";
 import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { iBankAccount } from "@mmpotulo/stablecoin-hooks";
 
 // --- Bank Account View ---
 function BankAccountView({

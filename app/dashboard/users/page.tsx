@@ -5,9 +5,9 @@ import { UserList } from "@/components/users/user-list";
 import { UserDetailsCard } from "@/components/users/user-details-card";
 import { CreateUserModal } from "@/components/users/create-user-modal";
 import axios from "axios";
-import { IUser } from "@/types/users";
 import { Icon } from "@iconify/react";
 import { useOrganization } from "@clerk/nextjs";
+import { iUser } from "@mmpotulo/stablecoin-hooks";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
 
@@ -17,7 +17,7 @@ const UsersPage = () => {
 	const [searchId, setSearchId] = useState("");
 	const [searching, setSearching] = useState(false);
 	const [searchError, setSearchError] = useState<string | null>(null);
-	const [foundUser, setFoundUser] = useState<IUser | null>(null);
+	const [foundUser, setFoundUser] = useState<iUser | null>(null);
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
 	const openCreateModal = () => setIsCreateModalOpen(true);
@@ -29,7 +29,7 @@ const UsersPage = () => {
 		setSearchError(null);
 		setFoundUser(null);
 		try {
-			const { data } = await axios.get<{ user: IUser }>(
+			const { data } = await axios.get<{ user: iUser }>(
 				`${API_BASE}/users/${searchId.trim()}`,
 				{
 					headers: { Authorization: `${organization?.publicMetadata.apiToken}` || "" },
