@@ -1,8 +1,17 @@
-import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Input, Button, Spinner } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Input,
+	Button,
+	Spinner,
+	Autocomplete,
+	AutocompleteItem,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { UserDetailsCard } from "../users/user-details-card";
-import { useLiskTransfer } from "@mmpotulo/stablecoin-hooks";
+import { useLiskTransfer, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 import { useOrganization } from "@clerk/nextjs";
 
 export function FindRecipient() {
@@ -11,8 +20,14 @@ export function FindRecipient() {
 	const { recipient, recipientLoading, recipientError, fetchRecipient } = useLiskTransfer({
 		apiKey: `Bearer ${apiKey}`,
 	});
-
 	const [recipientId, setRecipientId] = useState("");
+	const { users, usersError, fetchUsers } = useLiskUsers({
+		apiKey: `Bearer ${apiKey}`,
+	});
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	return (
 		<Card className="max-w-2xl mx-auto mb-8">
@@ -23,6 +38,8 @@ export function FindRecipient() {
 				</div>
 			</CardHeader>
 			<CardBody>
+				{usersError && <div className="text-danger mt-2">{usersError}</div>}
+
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
@@ -30,12 +47,32 @@ export function FindRecipient() {
 					}}
 					className="flex gap-2 items-center flex-wrap mb-2">
 					<Input
+						label="Recipient ID"
 						placeholder="Recipient email or payment identifier"
 						value={recipientId}
 						onChange={(e) => setRecipientId(e.target.value)}
 						className="max-w-xs"
 						isDisabled={recipientLoading}
 					/>
+
+					{/* <span className="text-default-500 mx-auto">OR</span> */}
+
+					<Autocomplete
+						size="md"
+						className="w-full max-w-xs"
+						defaultItems={users}
+						label="Pick a User"
+						value={recipientId}
+						placeholder="Search a user"
+						onSelectionChange={(key) => key && setRecipientId(key.toString())}>
+						{(user) => (
+							<AutocompleteItem
+								key={user.email}
+								title={`${user.firstName} ${user.lastName}`}
+								description={user.email}
+							/>
+						)}
+					</Autocomplete>
 					<Button
 						color="primary"
 						type="submit"

@@ -25,7 +25,7 @@ export default function SettingsPage() {
 	const { theme, setTheme } = useTheme();
 	const { organization } = useOrganization();
 	const { user } = useUser();
-	const [apiBase, setApiBase] = useState(process.env.NEXT_PUBLIC_API_BASE || "");
+	const [apiBase, setApiBase] = useState(process.env.NEXT_PUBLIC_LISK_API_BASE || "");
 	const [businessName, setBusinessName] = useState<string>("");
 	const [businessDesc, setBusinessDesc] = useState<string>("");
 	const [apiToken, setApiToken] = useState<string>("");
@@ -142,7 +142,7 @@ export default function SettingsPage() {
 							colorText: "hsl(var(--heroui-foreground) / 1)",
 							colorBorder: "hsl(var(--heroui-default-500) / 1)",
 							colorPrimary: "hsl(var(--heroui-primary) / 1)",
-							colorMessage: "hsl(var(--heroui-success) / 1)",
+							colorSuccess: "hsl(var(--heroui-success) / 1)",
 							colorWarning: "hsl(var(--heroui-warning) / 1)",
 							colorDanger: "hsl(var(--heroui-danger) / 1)",
 							colorTextSecondary: "hsl(var(--heroui-secondary) / 1)",
@@ -176,6 +176,8 @@ export default function SettingsPage() {
 						}}
 						className="space-y-4">
 						<Input
+							color="primary"
+							variant="bordered"
 							label="API Base URL"
 							value={apiBase}
 							onChange={(e) => setApiBase(e.target.value)}
@@ -193,6 +195,8 @@ export default function SettingsPage() {
 							type="password"
 						/>
 						<Input
+							color="secondary"
+							variant="bordered"
 							label="Business Name"
 							value={businessName}
 							onChange={(e) => setBusinessName(e.target.value)}

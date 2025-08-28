@@ -1,11 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { Card, Input, Button, Spinner, Tabs, Tab } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import {
+	Card,
+	Input,
+	Button,
+	Spinner,
+	Tabs,
+	Tab,
+	AutocompleteItem,
+	Autocomplete,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import BankAccountForm from "@/components/banks/BankAccountForm";
 import BankAccountView from "@/components/banks/BankAccountView";
 import DepositWithdrawForm from "@/components/banks/DepositWithdrawForm";
-import { useLiskBank } from "@mmpotulo/stablecoin-hooks";
+import { useLiskBank, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 import { useOrganization, useUser } from "@clerk/nextjs";
 
 // --- Main Page ---
@@ -27,6 +36,10 @@ export default function BankAccountsPage() {
 		createTransaction,
 	} = useLiskBank({ apiKey: `Bearer ${apiKey}`, user });
 
+	const { users, usersError, fetchUsers } = useLiskUsers({
+		apiKey: `Bearer ${apiKey}`,
+	});
+
 	const [form, setForm] = useState({
 		accountHolder: "",
 		accountNumber: "",
@@ -44,6 +57,10 @@ export default function BankAccountsPage() {
 	});
 	const [txMessage, setTxMessage] = useState<string | null>(null);
 	const [txError, setTxError] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -109,16 +126,30 @@ export default function BankAccountsPage() {
 						<Icon icon="lucide:user" />
 						Bank Accounts
 					</h1>
+
+					{usersError && <div className="text-danger mb-4">{usersError}</div>}
+
 					<form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 ">
-						<Input
+						<Autocomplete
+							color="primary"
 							variant="bordered"
-							placeholder="Enter User ID"
+							size="sm"
+							className="w-full"
+							defaultItems={users}
+							label="Pick a User"
 							value={userId}
-							onChange={(e) => setUserId(e.target.value)}
-							className="max-w-xs w-full"
-							isDisabled={bankLoading}
-						/>
+							placeholder="Search a user"
+							onSelectionChange={(key) => key && setUserId(key.toString())}>
+							{(user) => (
+								<AutocompleteItem
+									key={user.id}
+									title={`${user.firstName} ${user.lastName}`}
+									description={user.email}
+								/>
+							)}
+						</Autocomplete>
 						<Button
+							title="Search User"
 							color="primary"
 							type="submit"
 							isDisabled={!userId.trim() || bankLoading}

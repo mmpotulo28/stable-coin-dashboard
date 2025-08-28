@@ -1,8 +1,17 @@
-import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Input, Button, Spinner } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Input,
+	Button,
+	Spinner,
+	Autocomplete,
+	AutocompleteItem,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useOrganization } from "@clerk/nextjs";
-import { useLiskTransfer } from "@mmpotulo/stablecoin-hooks";
+import { useLiskTransfer, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 
 export function SingleTransfer() {
 	const { organization } = useOrganization();
@@ -11,10 +20,18 @@ export function SingleTransfer() {
 		apiKey: `Bearer ${apiKey}`,
 	});
 
+	const { users, usersError, fetchUsers } = useLiskUsers({
+		apiKey: `Bearer ${apiKey}`,
+	});
+
 	const [userId, setUserId] = useState("");
 	const [recipientId, setRecipientId] = useState("");
 	const [amount, setAmount] = useState("");
 	const [notes, setNotes] = useState("");
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
 
 	return (
 		<Card className="max-w-2xl mx-auto mb-8">
@@ -25,6 +42,8 @@ export function SingleTransfer() {
 				</div>
 			</CardHeader>
 			<CardBody>
+				{usersError && <div className="text-danger mt-2">{usersError}</div>}
+
 				<form
 					onSubmit={async (e) => {
 						e.preventDefault();
@@ -36,18 +55,41 @@ export function SingleTransfer() {
 						});
 					}}
 					className="space-y-4">
-					<Input
-						label="Sender User ID"
+					<Autocomplete
+						size="md"
+						className="w-full "
+						defaultItems={users}
+						required
+						label="Sender user ID"
 						value={userId}
-						onChange={(e) => setUserId(e.target.value)}
-						isRequired
-					/>
-					<Input
+						placeholder="Sender user ID"
+						onSelectionChange={(key) => key && setUserId(key.toString())}>
+						{(user) => (
+							<AutocompleteItem
+								key={user.id}
+								title={`${user.firstName} ${user.lastName}`}
+								description={user.email}
+							/>
+						)}
+					</Autocomplete>
+
+					<Autocomplete
+						size="md"
+						className="w-full "
+						defaultItems={users}
+						required
 						label="Recipient (email or payment identifier)"
 						value={recipientId}
-						onChange={(e) => setRecipientId(e.target.value)}
-						isRequired
-					/>
+						placeholder="Recipient ID"
+						onSelectionChange={(key) => key && setRecipientId(key.toString())}>
+						{(user) => (
+							<AutocompleteItem
+								key={user.paymentIdentifier}
+								title={`${user.firstName} ${user.lastName}`}
+								description={user.email}
+							/>
+						)}
+					</Autocomplete>
 					<Input
 						label="Amount"
 						type="number"
