@@ -40,3 +40,5 @@ package-lock.json
 bun.lockb
 # clerk configuration (can include secrets)
 /.clerk/
+
+certificates
