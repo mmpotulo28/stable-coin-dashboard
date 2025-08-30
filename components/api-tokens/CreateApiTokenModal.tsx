@@ -18,7 +18,7 @@ export function CreateApiTokenModal({ isOpen, onClose }: { isOpen: boolean; onCl
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { createToken, createTokenLoading, createTokenError, createdToken } = useLiskApiTokens({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 	const [desc, setDesc] = useState("");
 

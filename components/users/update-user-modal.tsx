@@ -21,13 +21,11 @@ interface UpdateUserModalProps {
 	onUpdated?: () => void;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE as string;
-
 export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUserModalProps) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { updateUser, updateUserError, updateUserLoading, updateUserMessage } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const [form, setForm] = useState({
@@ -36,8 +34,6 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 		lastName: user?.lastName ?? "",
 		imageUrl: user?.imageUrl ?? "",
 	});
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 
 	React.useEffect(() => {
 		setForm({
@@ -46,7 +42,6 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 			lastName: user?.lastName ?? "",
 			imageUrl: user?.imageUrl ?? "",
 		});
-		setError(null);
 	}, [user, isOpen]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +50,7 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
+		console.log("Submitting form:", e.target);
 		e.preventDefault();
 		if (!user) return;
 
@@ -121,22 +117,27 @@ export function UpdateUserModal({ user, isOpen, onClose, onUpdated }: UpdateUser
 								value={form.imageUrl ?? ""}
 								onChange={handleChange}
 							/>
-							{error && <div className="text-danger font-medium">{error}</div>}
+
+							<Button onPress={onClose} variant="light" className="mr-2">
+								Cancel
+							</Button>
+							<Button
+								color="primary"
+								type="submit"
+								isLoading={updateUserLoading}
+								isDisabled={updateUserLoading || !user}>
+								{updateUserLoading ? <Spinner size="sm" /> : "Update"}
+							</Button>
 						</form>
 					)}
 				</ModalBody>
 				<ModalFooter className="flex justify-end  pt-2">
-					<Button onPress={onClose} variant="light" className="mr-2">
-						Cancel
-					</Button>
-					<Button
-						color="primary"
-						type="submit"
-						isLoading={loading}
-						onClick={(e) => handleSubmit(e)}
-						isDisabled={loading || !user}>
-						{loading ? <Spinner size="sm" /> : "Update"}
-					</Button>
+					{updateUserMessage && (
+						<div className="mb-4 text-sm text-success-500">{updateUserMessage}</div>
+					)}
+					{updateUserError && (
+						<div className="mb-4 text-sm text-danger">{updateUserError}</div>
+					)}
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

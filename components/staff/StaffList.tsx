@@ -9,7 +9,7 @@ export function StaffList() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { staff, staffLoading, staffError, removeStaff, removeStaffError } = useLiskStaff({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const handleRemove = async (id: string) => {

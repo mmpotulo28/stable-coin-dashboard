@@ -19,18 +19,22 @@ export function TokenBalances({ float, loadingFloat, floatError }: TokenBalanceP
 				</div>
 			</CardHeader>
 			<CardBody>
-				{loadingFloat ? (
+				{loadingFloat && (
 					<div className="flex items-center gap-2 justify-center py-8">
 						<Spinner label="Loading balances..." />
 					</div>
-				) : floatError ? (
+				)}
+
+				{floatError && (
 					<Alert
 						title="Error"
 						description={floatError}
 						variant="bordered"
 						color="danger"
 					/>
-				) : float.length === 0 ? (
+				)}
+
+				{!loadingFloat && float.length === 0 && (
 					<div className="flex flex-col items-center justify-center py-8">
 						<Image
 							src="https://illustrations.popsy.co/gray/empty-wallet.svg"
@@ -41,7 +45,9 @@ export function TokenBalances({ float, loadingFloat, floatError }: TokenBalanceP
 						/>
 						<div className="text-default-500 font-medium">No tokens found.</div>
 					</div>
-				) : (
+				)}
+
+				{!loadingFloat && float.length > 0 && (
 					<div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
 						{float.map((token) => (
 							<Card

@@ -26,7 +26,7 @@ export function CreateChargeModal({
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { createCharge, chargesLoading, chargesError, charge } = useLiskCharges({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey
 		user,
 	});
 	const [paymentId, setPaymentId] = useState("");

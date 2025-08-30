@@ -27,7 +27,7 @@ const CouponCard: React.FC<iCouponCardProps> = ({
 	const apiKey = organization?.publicMetadata.apiToken as string;
 
 	const { couponsLoading, claimCouponLoading, deleteCouponLoading, updateCouponLoading } =
-		useLiskCoupons({ apiKey: `Bearer ${apiKey}` });
+		useLiskCoupons({ apiKey: apiKey });
 
 	return (
 		<Card key={coupon.id} className="p-4 bg-default-100 shadow rounded-xl">

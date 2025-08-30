@@ -17,11 +17,11 @@ export function SingleTransfer() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { transferLoading, transferMessage, transferError, makeTransfer } = useLiskTransfer({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const { users, usersError, fetchUsers } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const [userId, setUserId] = useState("");

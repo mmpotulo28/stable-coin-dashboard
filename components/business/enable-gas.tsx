@@ -16,7 +16,7 @@ export function EnableGas() {
 		userGasMessage,
 		userGasError,
 		enableUserGas,
-	} = useLiskBusiness({ apiKey: `Bearer ${apiKey}` });
+	} = useLiskBusiness({ apiKey: apiKey });
 
 	const [userId, setUserId] = useState("");
 

@@ -14,7 +14,7 @@ export default function StaffPage() {
 	const { user } = useUser();
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { staffLoading, fetchStaff } = useLiskStaff({ apiKey: `Bearer ${apiKey}` });
+	const { staffLoading, fetchStaff } = useLiskStaff({ apiKey: apiKey });
 
 	useEffect(() => {
 		fetchStaff(user?.id || "");

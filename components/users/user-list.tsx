@@ -23,7 +23,7 @@ export function UserList({ limit = 10 }) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { fetchUsers, usersError, usersLoading, users } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 	const [selectedUser, setSelectedUser] = useState<iUser | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,13 +156,13 @@ export function UserList({ limit = 10 }) {
 				user={selectedUser}
 				isOpen={isUpdateModalOpen}
 				onClose={closeUpdateModal}
-				onUpdated={fetchUsers}
+				onUpdated={() => fetchUsers(true)}
 			/>
 			<DeleteUserModal
 				user={selectedUser}
 				isOpen={isDeleteModalOpen}
 				onClose={closeDeleteModal}
-				onDeleted={fetchUsers}
+				onDeleted={() => fetchUsers(true)}
 			/>
 		</div>
 	);

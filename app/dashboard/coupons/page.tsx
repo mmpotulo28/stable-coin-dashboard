@@ -42,7 +42,7 @@ export default function CouponsPage() {
 		deleteCouponError,
 		deleteCouponLoading,
 		deleteCouponMessage,
-	} = useLiskCoupons({ apiKey: `Bearer ${apiKey}` });
+	} = useLiskCoupons({ apiKey: apiKey });
 
 	const { user } = useUser();
 

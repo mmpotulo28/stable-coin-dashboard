@@ -23,14 +23,14 @@ export function TransactionSearch() {
 	const [userId, setUserId] = useState("");
 	const [transactionId, setTransactionId] = useState("");
 	const [searched, setSearched] = useState(false);
-	const { users, fetchUsers } = useLiskUsers({ apiKey: `Bearer ${apiKey}` });
+	const { users, fetchUsers } = useLiskUsers({ apiKey: apiKey });
 
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 
 	const { transaction, transactionLoading, transactionError, fetchSingleTransaction } =
-		useLiskTransactions({ apiKey: `Bearer ${apiKey}` });
+		useLiskTransactions({ apiKey: apiKey });
 
 	const handleSearch = async (e: React.FormEvent) => {
 		e.preventDefault();

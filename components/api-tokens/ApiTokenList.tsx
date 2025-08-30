@@ -41,7 +41,7 @@ export function ApiTokenList() {
 		revokeTokenLoading,
 		revokeTokenMessage,
 		fetchTokens,
-	} = useLiskApiTokens({ apiKey: `Bearer ${apiKey}` });
+	} = useLiskApiTokens({ apiKey: apiKey });
 
 	const [editId, setEditId] = useState<string | null>(null);
 	const [editDesc, setEditDesc] = useState("");

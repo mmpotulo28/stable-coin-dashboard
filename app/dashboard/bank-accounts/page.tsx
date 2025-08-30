@@ -34,10 +34,10 @@ export default function BankAccountsPage() {
 		upsertBankAccount,
 		deleteBankAccount,
 		createTransaction,
-	} = useLiskBank({ apiKey: `Bearer ${apiKey}`, user });
+	} = useLiskBank({ apiKey user });
 
 	const { users, usersError, fetchUsers } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey
 	});
 
 	const [form, setForm] = useState({

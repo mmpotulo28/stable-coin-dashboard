@@ -21,7 +21,7 @@ export function BatchTransfer() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { batchTransferLoading, batchTransferMessage, batchTransferError, makeBatchTransfer } =
-		useLiskTransfer({ apiKey: `Bearer ${apiKey}` });
+		useLiskTransfer({ apiKey: apiKey });
 
 	const [userId, setUserId] = useState("");
 	const [recipientId, setRecipientId] = useState("");

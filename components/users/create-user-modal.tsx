@@ -25,7 +25,7 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { createUser, usersError, usersLoading, singleUser } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const [form, setForm] = useState<iUser>({

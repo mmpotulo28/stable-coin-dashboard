@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, Tab } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { TokenBalances } from "@/components/business/token-balances";
@@ -12,7 +12,15 @@ import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
 const BusinessManagement = () => {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
-	const { float, loadingFloat, floatError } = useLiskBusiness({ apiKey: `Bearer ${apiKey}` });
+	const { float, loadingFloat, floatError, fetchFloat } = useLiskBusiness({
+		apiKey,
+	});
+
+	useEffect(() => {
+		console.log("Fetching float data...", apiKey);
+		fetchFloat();
+	}, []);
+
 	return (
 		<div className="flex-1 overflow-auto p-6 space-y-8">
 			<h1 className="text-2xl font-semibold mb-6">Business Management</h1>

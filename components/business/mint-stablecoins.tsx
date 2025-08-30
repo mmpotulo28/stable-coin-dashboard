@@ -8,7 +8,7 @@ export function MintStablecoins() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { mintForm, setMintForm, mintLoading, mintMessage, mintError, mintStableCoins } =
-		useLiskBusiness({ apiKey: `Bearer ${apiKey}` });
+		useLiskBusiness({ apiKey: apiKey });
 
 	const handleMint = async (e: React.FormEvent) => {
 		e.preventDefault();

@@ -18,11 +18,11 @@ export function FindRecipient() {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { recipient, recipientLoading, recipientError, fetchRecipient } = useLiskTransfer({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 	const [recipientId, setRecipientId] = useState("");
 	const { users, usersError, fetchUsers } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	useEffect(() => {

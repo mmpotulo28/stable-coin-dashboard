@@ -26,7 +26,7 @@ export function DeleteUserModal({ user, isOpen, onClose, onDeleted }: DeleteUser
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { deleteUser, deleteUserError, deleteUserLoading, deleteUserMessage } = useLiskUsers({
-		apiKey: `Bearer ${apiKey}`,
+		apiKey,
 	});
 
 	const handleDelete = async () => {
