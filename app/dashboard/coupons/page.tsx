@@ -12,6 +12,7 @@ import {
 	iCouponUpdateRequest,
 	useLiskCoupons,
 } from "@mmpotulo/stablecoin-hooks";
+import Messages from "@/components/common/messages";
 
 export default function CouponsPage() {
 	const { organization } = useOrganization();
@@ -99,6 +100,7 @@ export default function CouponsPage() {
 				</h1>
 				<Button
 					color="primary"
+					isLoading={createCouponLoading}
 					startContent={<Icon icon="lucide:plus" />}
 					onPress={() => setIsCreateOpen(true)}>
 					Create Coupon
@@ -116,7 +118,7 @@ export default function CouponsPage() {
 							size="sm"
 							className="ml-2"
 							aria-label="Refresh coupons"
-							onPress={fetchCoupons}
+							onPress={() => fetchCoupons(true)}
 							isDisabled={couponsLoading}>
 							<Icon icon="lucide:refresh-cw" />
 						</Button>
@@ -128,25 +130,36 @@ export default function CouponsPage() {
 							<Spinner label="Loading coupons..." />
 						</div>
 					)}
-					{couponsError && (
-						<div className="text-danger text-center py-8">{couponsError}</div>
-					)}
+					<Messages
+						messages={[
+							createCouponMessage,
+							updateCouponMessage,
+							deleteCouponMessage,
+							claimCouponMessage,
+						]
+							.filter((msg) => msg !== undefined)
+							.map((msg, index) => ({
+								id: `couponMsg-${index}`,
+								message: msg,
+								type: "success",
+							}))}
+					/>
 
-					{createCouponError && (
-						<div className="text-danger text-center py-8">{createCouponError}</div>
-					)}
-
-					{updateCouponError && (
-						<div className="text-danger text-center py-8">{updateCouponError}</div>
-					)}
-
-					{claimCouponError && (
-						<div className="text-danger text-center py-8">{claimCouponError}</div>
-					)}
-
-					{deleteCouponError && (
-						<div className="text-danger text-center py-8">{deleteCouponError}</div>
-					)}
+					<Messages
+						messages={[
+							couponsError,
+							createCouponError,
+							updateCouponError,
+							deleteCouponError,
+							claimCouponError,
+						]
+							.filter((msg) => msg !== undefined)
+							.map((msg, index) => ({
+								id: `couponMsg-${index}`,
+								message: msg,
+								type: "error",
+							}))}
+					/>
 
 					{!couponsLoading && coupons.length === 0 && (
 						<div className="flex flex-col items-center justify-center py-8">

@@ -24,7 +24,7 @@ export function ChargeList({ userId }: { userId: string }) {
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { charges, chargesLoading, chargesError, fetchCharges, deleteCharge } = useLiskCharges({
-		apiKey
+		apiKey,
 		user,
 	});
 

@@ -32,7 +32,7 @@ export function UpdateChargeModal({
 	const { organization } = useOrganization();
 	const apiKey = organization?.publicMetadata.apiToken as string;
 	const { updateCharge, chargesLoading, chargesError } = useLiskCharges({
-		apiKey
+		apiKey,
 		user,
 	});
 	const [note, setNote] = useState("");
