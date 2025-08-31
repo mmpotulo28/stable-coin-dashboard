@@ -40,13 +40,15 @@ export function PendingTransactions() {
 				</div>
 			</CardHeader>
 			<CardBody>
-				{pendingLoading ? (
+				{pendingLoading && (
 					<div className="flex items-center gap-2">
 						<Spinner label="Loading pending transactions..." />
 					</div>
-				) : pendingError ? (
-					<div className="text-danger">{pendingError}</div>
-				) : (
+				)}
+
+				{pendingError && <div className="text-danger">{pendingError}</div>}
+
+				{!pendingLoading && !pendingError && (
 					<>
 						<Table aria-label="Pending Transactions" removeWrapper>
 							<TableHeader>

@@ -29,7 +29,7 @@ export function UserTransactions({
 	const [selectedTx, setSelectedTx] = useState<iTransaction | undefined>(undefined);
 
 	return (
-		<Card className="max-w-2xl mx-auto mb-4">
+		<Card className="w-full mx-auto mb-4 justify-center flex flex-col">
 			<CardHeader>
 				<div className="flex items-center gap-2">
 					<Icon icon="lucide:clock" className="text-xl" />

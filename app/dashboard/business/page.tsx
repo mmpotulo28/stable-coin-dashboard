@@ -17,7 +17,7 @@ const BusinessManagement = () => {
 	});
 
 	useEffect(() => {
-		console.log("Fetching float data...", apiKey);
+		console.log("Fetching float data...");
 		fetchFloat();
 	}, []);
 

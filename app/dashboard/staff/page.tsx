@@ -34,7 +34,7 @@ export default function StaffPage() {
 						variant="bordered"
 						aria-label="Refresh staff"
 						isLoading={staffLoading}
-						onPress={() => fetchStaff(user?.id || "")}
+						onPress={() => fetchStaff(user?.id || "", true)}
 						isDisabled={staffLoading}>
 						<Icon icon="lucide:refresh-cw" />
 					</Button>

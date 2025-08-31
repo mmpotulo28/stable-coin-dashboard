@@ -63,7 +63,7 @@ export function ChargeList({ userId }: { userId: string }) {
 					<Button
 						variant="light"
 						isIconOnly
-						onPress={() => fetchCharges(userId)}
+						onPress={() => fetchCharges(userId, true)}
 						isLoading={chargesLoading}
 						aria-label="Refresh"
 						className="ml-2">

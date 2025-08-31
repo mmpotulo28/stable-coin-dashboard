@@ -78,7 +78,7 @@ export function ApiTokenList() {
 					<Button
 						variant="light"
 						isIconOnly
-						onPress={() => fetchTokens()}
+						onPress={() => fetchTokens(true)}
 						isLoading={apiTokenLoading}
 						aria-label="Refresh"
 						className="ml-2">

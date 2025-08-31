@@ -37,7 +37,7 @@ export function AllTransactions() {
 	};
 
 	return (
-		<Card className="max-w-2xl mx-auto mb-8">
+		<Card className="max-w-full mx-auto mb-8">
 			<CardHeader>
 				<div className="flex items-center gap-2">
 					<Icon icon="lucide:users" className="text-xl" />
@@ -45,7 +45,9 @@ export function AllTransactions() {
 				</div>
 			</CardHeader>
 			<CardBody>
-				<form onSubmit={handleSearch} className="w-full flex flex-col gap-2 items-start">
+				<form
+					onSubmit={handleSearch}
+					className="w-full flex flex-col gap-2 items-start mb-4">
 					<div className="w-full flex gap-3 items-center">
 						<Input
 							placeholder="User ID"

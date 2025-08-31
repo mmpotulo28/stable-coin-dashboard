@@ -1,8 +1,18 @@
-import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Button, Input, Divider, Tooltip } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Input,
+	Divider,
+	Tooltip,
+	Autocomplete,
+	AutocompleteItem,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useOrganization } from "@clerk/nextjs";
-import { useLiskBusiness } from "@mmpotulo/stablecoin-hooks";
+import { useLiskBusiness, useLiskUsers } from "@mmpotulo/stablecoin-hooks";
 
 export function EnableGas() {
 	const { organization } = useOrganization();
@@ -17,6 +27,11 @@ export function EnableGas() {
 		userGasError,
 		enableUserGas,
 	} = useLiskBusiness({ apiKey: apiKey });
+	const { users, fetchUsers, usersError, usersLoading } = useLiskUsers({ apiKey: apiKey });
+
+	useEffect(() => {
+		fetchUsers();
+	}, [fetchUsers]);
 
 	const [userId, setUserId] = useState("");
 
@@ -66,6 +81,8 @@ export function EnableGas() {
 						<p className="text-default-400 text-sm mb-4">
 							Enter a user ID to grant gas for their transactions.
 						</p>
+						{usersError && <div className="text-danger mt-2">{usersError}</div>}
+
 						<form
 							onSubmit={(e) => {
 								e.preventDefault();
@@ -81,11 +98,30 @@ export function EnableGas() {
 								startContent={<Icon icon="lucide:user" />}
 								autoComplete="off"
 							/>
+							<span className="text-default-500 mx-auto">OR</span>
+							<Autocomplete
+								size="md"
+								className="w-full "
+								defaultItems={users}
+								required
+								label="Sender user ID"
+								value={userId}
+								disabled={usersLoading}
+								placeholder="Sender user ID"
+								onSelectionChange={(key) => key && setUserId(key.toString())}>
+								{(user) => (
+									<AutocompleteItem
+										key={user.id}
+										title={`${user.firstName} ${user.lastName}`}
+										description={user.email}
+									/>
+								)}
+							</Autocomplete>
 							<Button
 								color="secondary"
 								type="submit"
-								isLoading={userGasLoading}
-								isDisabled={userGasLoading || !userId.trim()}
+								isLoading={userGasLoading || usersLoading}
+								isDisabled={userGasLoading || !userId.trim() || usersLoading}
 								startContent={<Icon icon="lucide:zap" />}>
 								Enable Gas for User
 							</Button>
